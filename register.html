@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>*
+    <link rel="stylesheet" href="styleRegister.css">
+</head>
+<body>
+
+    <div class="register-container">
+        <!-- Logo -->
+        <img src="logo.png" alt="Logo de la Institución">
+
+        <!-- Formulario de registro -->
+        <form action="register.php" method="POST">
+            <input type="email" name="correo" placeholder="Correo Institucional" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <input type="password" name="confirm_password" placeholder="Confirmar contraseña" required>
+            
+            <a href=" " class="login-link">Iniciar sesión</a>
+
+            <!-- Botón de siguiente -->
+            <input type="submit" value="Siguiente" class="btn-siguiente">
+        </form>
+    </div>
+
+</body>
+</html>

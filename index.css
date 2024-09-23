@@ -1,0 +1,109 @@
+/* Estilos globales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff; /* Fondo azul claro */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #002D6D; /* Azul oscuro de la imagen */
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+nav {
+    margin: 0;
+    padding: 0;
+    background-color: #58B947; /* Verde de la imagen */
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li a {
+    display: block;
+    padding: 15px 30px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: #002D6D; /* Azul oscuro */
+}
+
+/* Sección principal */
+.container {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.container h2 {
+    color: #002D6D; /* Azul oscuro */
+    margin-bottom: 30px;
+}
+
+/* Estilos del contenedor de cards */
+.card-container {
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    gap: 20px; /* Espacio entre cada card */
+    flex-wrap: wrap; /* Asegurar que las tarjetas se ajusten en pantallas pequeñas */
+}
+
+/* Estilos de la Card */
+.card {
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 30px 20px;
+    text-align: center;
+    width: 200px; /* Ancho de cada card */
+}
+
+/* Botones dentro de cada card */
+.button {
+    background-color: #58B947; /* Verde */
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #2A6C2C; /* Verde más oscuro */
+}
+
+/* Footer */
+footer {
+    background-color: #002D6D; /* Azul oscuro */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}

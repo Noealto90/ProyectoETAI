@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.register-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    text-align: center;
+}
+.register-container img {
+    width: 120px;
+    margin-bottom: 20px;
+}
+input[type="email"], input[type="password"] {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #e0e0e0; /* Color gris claro para los campos */
+}
+a.login-link {
+    display: block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #10B981; /* Verde claro para los enlaces */
+}
+a.login-link:hover {
+    text-decoration: underline;
+}
+.btn-siguiente {
+    background-color: #1E3A8A; /* Color azul oscuro */
+    border: none;
+    color: white;
+    padding: 10px;
+    width: 30%;
+    font-size: 16px;
+    border-radius: 30px; /* Bordes redondeados como en la imagen */
+    cursor: pointer;
+}
+.btn-siguiente:hover {
+    background-color: #163373; /* Color azul más oscuro al hacer hover */
+}

@@ -1,0 +1,76 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff; /* Fondo blanco */
+    color: #2c3e50; /* Texto azul oscuro */
+}
+
+header {
+    background-color: #003366; /* Azul oscuro del logo */
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    letter-spacing: 2px;
+    color: #ffffff; /* Texto blanco */
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: nowrap;
+    padding: 50px;
+}
+
+.card {
+    background-color: #66cc33; /* Verde similar al del logo */
+    width: 220px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    background-color: #558b2f; /* Un verde más oscuro al hacer hover */
+}
+
+.card h2 {
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    color: #003366; /* Texto azul oscuro */
+}
+
+.card a {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #ffcc00; /* Amarillo del punto de la "i" */
+    color: #003366; /* Texto azul oscuro */
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card a:hover {
+    background-color: #003366; /* Azul oscuro del logo */
+    color: #ffffff; /* Texto blanco al hacer hover */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+footer {
+    margin-top: 50px;
+    background-color: #003366; /* Azul oscuro del logo */
+    padding: 20px;
+    text-align: center;
+    color: #ffffff; /* Texto blanco */
+    font-size: 0.9em;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+}
