@@ -1,9 +1,26 @@
 let selectedDate = '';
 let selectedDesk = null;
+/*let escritoriosOcupados = [
+    { lab: 1, desk: 10 },  // Laboratorio 1, Escritorio 10
+    { lab: 1, desk: 5 },   // Laboratorio 1, Escritorio 5
+    { lab: 2, desk: 8 }    // Laboratorio 2, Escritorio 8
+];*/
+let escritoriosOcupados = []; // Inicializar como un array vacío
 
-
+/*// Obtener los escritorios ocupados desde el archivo PHP
+fetch('reservasEstu.php')
+    .then(response => response.json())
+    .then(data => {
+        escritoriosOcupados = data; // Asignar los datos obtenidos a la variable
+        // Aquí puedes llamar a la función que necesita usar escritoriosOcupados
+        // Por ejemplo, puedes generar los escritorios inicialmente
+        generateWorkspaces(selectedLab);
+    })
+    .catch(error => console.error('Error fetching data:', error));*/
 
 document.addEventListener('DOMContentLoaded', function() {
+
+    
     const calendarContainer = document.getElementById('reservation-calendar');
     const timeInput = document.getElementById('reservation-time');
     const confirmTime = document.getElementById('confirm-time');
@@ -34,12 +51,65 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+function enviarReservaYObtenerEscritorios() {
+    // Recopilar los datos seleccionados
+    const selectedLab = document.getElementById('lab-select').value;
+    const selectedDate = document.getElementById('confirm-date').innerText;
+    const selectedTime = document.getElementById('confirm-time').innerText;
+
+    if (!selectedLab || !selectedDate || !selectedTime) {
+        alert('Por favor, completa todos los detalles de la reserva.');
+        return;
+    }
+
+    // Crear un objeto con los datos de la reserva
+    const reservaData = {
+        lab: selectedLab,
+        date: selectedDate,
+        time: selectedTime
+    };
+
+    // Enviar los datos al PHP usando fetch con método POST
+    fetch('reservasEstu.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reservaData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Reserva confirmada:', data.reserva);
+            // Luego, obtener los escritorios ocupados
+            obtenerEscritoriosOcupados();
+        } else {
+            console.error('Error al confirmar la reserva.');
+            
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+// Función para obtener los escritorios ocupados después de confirmar la reserva
+function obtenerEscritoriosOcupados() {
+    fetch('reservasEstu.php')
+        .then(response => response.json())
+        .then(data => {
+            escritoriosOcupados = data; // Asignar los datos obtenidos a la variable
+            // Generar los escritorios
+            generateWorkspaces(selectedLab);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
 
 let selectedLab = 0; // Por defecto, Laboratorio 1
 
 function selectLab(labNumber) {
     selectedLab = parseInt(labNumber);
-    generateWorkspaces(selectedLab);
+    enviarReservaYObtenerEscritorios();
+    //generateWorkspaces(selectedLab);
 }
 
 function generateWorkspaces(labNumber) {
@@ -59,8 +129,14 @@ function generateWorkspaces(labNumber) {
         const workspace = document.createElement('div');
         workspace.classList.add('workspace');
         workspace.textContent = `Escritorio ${i}`;
-        workspace.onclick = function() {
-            selectDesk(i);
+        // Comprobar si el escritorio está ocupado
+        const isOccupied = escritoriosOcupados.some((item) => item.lab === labNumber && item.desk === i);
+        if (isOccupied) {
+            workspace.classList.add('occupied');  // Añadir clase si el escritorio está ocupado
+        } else {
+            workspace.onclick = function() {
+                selectDesk(i);
+            };
         };
 
         // Distribuir los escritorios entre las dos filas

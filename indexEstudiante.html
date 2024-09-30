@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Equipos</title>
+    <style>
+        /* Estilos globales */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* Color azul claro de fondo */
+            color: #002D6D;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #002D6D; /* Azul oscuro */
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        nav {
+            margin: 0;
+            padding: 0;
+            background-color: #58B947; /* Verde claro */
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 15px 30px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #2c3e50; /* Azul oscuro */
+        }
+
+        /* Sección principal */
+        .container {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .container h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        /* Botones */
+        .button {
+            background-color: #002D6D; /* Azul */
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #002D6D; /* Azul más oscuro */
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Inicio Estudiante</h1>
+    </header>
+
+    <div class="container">
+        <h2>Seleccione una opción del menú </h2>
+        <a href="reservasEstu.html" class="button">Reservar Espacio</a>
+        <a href="Reporte.html" class="button">Reporte Daños</a>
+        <a href="Renovar.html" class="button">Renovar Espacio</a>
+    </div>
+
+    <footer>
+        <p>© 2024 Sistema de Gestion de Estudiantes</p>
+    </footer>
+</body>
+</html>

@@ -26,10 +26,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($usuario && password_verify($password, $usuario['contrasena'])) {
                 // Credenciales correctas: guarda la sesión del usuario
                 $_SESSION['usuario'] = $usuario['correo_institucional'];
-                echo "Inicio de sesión exitoso. ¡Bienvenido!";
-                // Redirige al usuario a una página protegida
-                header('Location: superAdmin.html');
-                exit(); // Importante para detener el script después de la redirección
+                $_SESSION['rol'] = $usuario['rol']; // Almacena el rol en la sesión
+
+                // Redirige al usuario basado en el rol
+                if ($usuario['rol'] == 'estudiante') {
+                    header('Location: indexEstudiante.html');
+                } elseif ($usuario['rol'] == 'superAdmin') {
+                    header('Location: superAdmin.html');
+                } else {
+                    echo "Rol no válido.";
+                }
+
+                exit(); // Detener el script después de la redirección
             } else {
                 echo "Correo o contraseña incorrectos.";
             }
