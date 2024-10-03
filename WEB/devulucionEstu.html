@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devolución de Equipos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #002D6D;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .container {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .alert {
+            display: none;
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            text-align: center;
+            width: 200px;
+            margin: 0 auto;
+        }
+
+        form {
+            display: inline-block;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        form label, form select, form button {
+            display: block;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        form select, form button {
+            padding: 12px;
+            border-radius: 5px;
+        }
+
+        form button {
+            background-color: #002D6D;
+            color: white;
+            border: none;
+        }
+
+        footer {
+            background-color: #002D6D;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Devolución de Equipos</h1>
+    </header>
+
+    <div class="container">
+        <!-- Mensaje de confirmación -->
+        <div class="alert" id="successMessage">¡Devolución confirmada!</div>
+
+        <h2>Seleccionar laboratorio y espacio para devolución</h2>
+        <form id="devolucion-form">
+            <label for="laboratorio">Seleccionar laboratorio:</label>
+            <select id="laboratorio" name="laboratorio">
+                <option value="1">Laboratorio 1</option>
+                <option value="2">Laboratorio 2</option>
+                <!-- Agregar más laboratorios según sea necesario -->
+            </select>
+
+            <label for="espacio">Seleccionar espacio ocupado:</label>
+            <select id="espacio" name="espacio">
+                <!-- Opciones de espacios ocupados se cargarán dinámicamente con PHP -->
+            </select>
+
+            <button type="submit">Confirmar devolución</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>© 2024 Sistema de Gestión de Equipos de Laboratorio</p>
+    </footer>
+
+    <script>
+        // Mostrar el mensaje de éxito
+        function showSuccessMessage() {
+            const message = document.getElementById('successMessage');
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000); // Ocultar el mensaje después de 3 segundos
+        }
+
+        // Cargar espacios ocupados al seleccionar un laboratorio
+        document.getElementById('laboratorio').addEventListener('change', function() {
+            const labId = this.value;
+            fetch(`devolucionEstu.php?laboratorio=${labId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const espacioSelect = document.getElementById('espacio');
+                    espacioSelect.innerHTML = '';
+                    data.espacios.forEach(espacio => {
+                        const option = document.createElement('option');
+                        option.value = espacio.espacio_id;
+                        option.textContent = `Espacio ${espacio.espacio_id}`;
+                        espacioSelect.appendChild(option);
+                    });
+                });
+        });
+
+        // Manejar la devolución del formulario con AJAX
+        document.getElementById('devolucion-form').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevenir el comportamiento normal del formulario
+            const laboratorio = document.getElementById('laboratorio').value;
+            const espacio = document.getElementById('espacio').value;
+
+            // Enviar los datos con fetch
+            fetch('devolucionEstu.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `laboratorio=${laboratorio}&espacio=${espacio}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data.includes('Devolución confirmada')) {
+                    showSuccessMessage();
+                }
+            })
+            .catch(() => {
+                alert('Ocurrió un error al procesar la devolución.');
+            });
+        });
+    </script>
+</body>
+</html>
