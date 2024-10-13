@@ -1,26 +1,8 @@
 let selectedDate = '';
 let selectedDesk = null;
-/*let escritoriosOcupados = [
-    { lab: 1, desk: 10 },  // Laboratorio 1, Escritorio 10
-    { lab: 1, desk: 5 },   // Laboratorio 1, Escritorio 5
-    { lab: 2, desk: 8 }    // Laboratorio 2, Escritorio 8
-];*/
 let escritoriosOcupados = []; // Inicializar como un array vacío
 
-/*// Obtener los escritorios ocupados desde el archivo PHP
-fetch('reservasEstu.php')
-    .then(response => response.json())
-    .then(data => {
-        escritoriosOcupados = data; // Asignar los datos obtenidos a la variable
-        // Aquí puedes llamar a la función que necesita usar escritoriosOcupados
-        // Por ejemplo, puedes generar los escritorios inicialmente
-        generateWorkspaces(selectedLab);
-    })
-    .catch(error => console.error('Error fetching data:', error));*/
-
 document.addEventListener('DOMContentLoaded', function() {
-
-    
     const calendarContainer = document.getElementById('reservation-calendar');
     const timeInput = document.getElementById('reservation-time');
     const confirmTime = document.getElementById('confirm-time');
@@ -52,24 +34,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function enviarReservaYObtenerEscritorios() {
-    // Recopilar los datos seleccionados
     const selectedLab = document.getElementById('lab-select').value;
     const selectedDate = document.getElementById('confirm-date').innerText;
     const selectedTime = document.getElementById('confirm-time').innerText;
+    const selectedDesk = document.getElementById('confirm-desk').innerText.split(' ')[1]; // Obtenemos el número de escritorio
 
-    if (!selectedLab || !selectedDate || !selectedTime) {
+    if (!selectedLab || !selectedDate || !selectedTime || !selectedDesk) {
         alert('Por favor, completa todos los detalles de la reserva.');
         return;
     }
 
-    // Crear un objeto con los datos de la reserva
     const reservaData = {
         lab: selectedLab,
         date: selectedDate,
-        time: selectedTime
+        time: selectedTime,
+        desk: selectedDesk
     };
 
-    // Enviar los datos al PHP usando fetch con método POST
     fetch('reservasEstu.php', {
         method: 'POST',
         headers: {
@@ -80,12 +61,10 @@ function enviarReservaYObtenerEscritorios() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log('Reserva confirmada:', data.reserva);
-            // Luego, obtener los escritorios ocupados
+            console.log('Reserva confirmada:', data.message);
             obtenerEscritoriosOcupados();
         } else {
-            console.error('Error al confirmar la reserva.');
-            
+            alert(data.message);
         }
     })
     .catch(error => console.error('Error:', error));
@@ -97,8 +76,7 @@ function obtenerEscritoriosOcupados() {
     fetch('reservasEstu.php')
         .then(response => response.json())
         .then(data => {
-            escritoriosOcupados = data; // Asignar los datos obtenidos a la variable
-            // Generar los escritorios
+            escritoriosOcupados = data;
             generateWorkspaces(selectedLab);
         })
         .catch(error => console.error('Error fetching data:', error));
@@ -107,57 +85,49 @@ function obtenerEscritoriosOcupados() {
 let selectedLab = 0; // Por defecto, Laboratorio 1
 
 function selectLab(labNumber) {
-    selectedLab = parseInt(labNumber);
-    enviarReservaYObtenerEscritorios();
-    //generateWorkspaces(selectedLab);
+    // Al seleccionar un laboratorio, hacer una solicitud para obtener los espacios disponibles
+    fetch('reservasEstu.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ lab: labNumber })  // Enviar el número de laboratorio seleccionado
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Llamar a la función que genera los escritorios con los espacios obtenidos
+            generateWorkspaces(data.espacios);
+        } else {
+            console.error('Error al obtener los espacios.');
+        }
+    })
+    .catch(error => console.error('Error al hacer la solicitud:', error));
 }
 
-function generateWorkspaces(labNumber) {
+
+function generateWorkspaces(espacios) {
     const workspaceGrid = document.getElementById('workspace-grid');
     workspaceGrid.innerHTML = ''; // Limpiar los espacios anteriores
 
-    let totalWorkspaces = labNumber === 1 ? 20 : 22;
-    let workspacesPerRow = Math.ceil(totalWorkspaces / 2); // Calcular la cantidad de escritorios por fila
-
-    // Crear las dos filas
-    const row1 = document.createElement('div');
-    row1.classList.add('row');
-    const row2 = document.createElement('div');
-    row2.classList.add('row');
-
-    for (let i = 1; i <= totalWorkspaces; i++) {
+    // Crear los escritorios en función de los datos recibidos
+    espacios.forEach(espacio => {
         const workspace = document.createElement('div');
         workspace.classList.add('workspace');
-        workspace.textContent = `Escritorio ${i}`;
-        // Comprobar si el escritorio está ocupado
-        const isOccupied = escritoriosOcupados.some((item) => item.lab === labNumber && item.desk === i);
-        if (isOccupied) {
-            workspace.classList.add('occupied');  // Añadir clase si el escritorio está ocupado
+        workspace.textContent = `Espacio ${espacio.espacio_id}`;
+        
+        // Comprobar si el espacio está ocupado
+        if (!espacio.activa) {
+            workspace.classList.add('occupied');  // Marcar como ocupado si no está activo
         } else {
             workspace.onclick = function() {
-                selectDesk(i);
+                selectDesk(espacio.espacio_id);
             };
-        };
-
-        // Distribuir los escritorios entre las dos filas
-        if (i <= workspacesPerRow) {
-            row1.appendChild(workspace);  // Primera fila
-        } else {
-            row2.appendChild(workspace);  // Segunda fila
         }
-    }
 
-    // Añadir las filas al contenedor de escritorios
-    workspaceGrid.appendChild(row1);
-    workspaceGrid.appendChild(row2);
-
-    // Restaurar el escritorio seleccionado si existe
-    if (selectedDesk) {
-        const desks = document.querySelectorAll('.workspace');
-        desks[selectedDesk - 1].classList.add('selected'); // Marcar visualmente el escritorio seleccionado
-    }
+        workspaceGrid.appendChild(workspace); // Añadir el espacio al contenedor
+    });
 }
-
 
 
 function selectDesk(deskNumber) {
@@ -166,25 +136,16 @@ function selectDesk(deskNumber) {
         desk.classList.remove('selected');
     });
 
-    // Encontrar el escritorio correcto usando querySelectorAll y su índice
-    const desks = document.querySelectorAll('.workspace');
-
-    // Acceder al escritorio con el número correcto (restar 1 porque querySelectorAll es 0-based)
-    const selected = desks[deskNumber - 1];
-
-    // Añadir la clase 'selected' al escritorio seleccionado
+    // Marcar el escritorio seleccionado
+    const selected = document.querySelector(`.workspace:nth-child(${deskNumber})`);
     selected.classList.add('selected');
 
-    // Actualizar el texto en el panel de confirmación
-    document.getElementById('confirm-desk').innerText = `Escritorio ${deskNumber}`;
-
-    // Guardar el escritorio seleccionado en la variable global
-    selectedDesk = deskNumber;
+    // Actualizar el panel de confirmación
+    document.getElementById('confirm-desk').innerText = `Espacio ${deskNumber}`;
 }
 
 
-
-
+// Función para pasar a la siguiente fase y actualizar la sección de confirmación
 function nextStep(step) {
     document.querySelectorAll('.step-content').forEach((section) => {
         section.style.display = 'none';
@@ -193,16 +154,26 @@ function nextStep(step) {
         section.style.display = 'none';
     });
 
+    // Muestra la sección correspondiente
     document.getElementById('step' + step).style.display = 'flex';
 
+    // Actualiza los pasos completados visualmente
     document.querySelectorAll('.step').forEach((el, idx) => {
         if (idx < step - 1) {
             el.classList.add('completed');
         } else {
             el.classList.remove('completed');
-    }
+        }
     });
+
+    // Si estamos en la fase de confirmación (step 3), actualizamos los detalles
+    if (step === 3) {
+        // Actualizamos la información de confirmación
+        const selectedLabText = document.querySelector('#lab-select option:checked').textContent;
+        document.getElementById('confirm-lab').innerText = selectedLabText;
+    }
 }
+
 
 // Función para retroceder al paso anterior
 function previousStep(step) {
@@ -230,3 +201,57 @@ function previousStep(step) {
         }
     }
 }
+
+
+
+document.querySelector('.confirm-btn').addEventListener('click', function() {
+    // Recopilar los datos seleccionados
+    const selectedLab = document.querySelector('#lab-select').value;
+    const selectedDate = document.getElementById('confirm-date').innerText;
+    const selectedTime = document.getElementById('confirm-time').innerText;
+    const selectedDesk = document.getElementById('confirm-desk').innerText.split(' ')[1];  // Obtenemos el número de espacio
+    const companionEmail = document.getElementById('companion-email') ? document.getElementById('companion-email').value : null;
+
+    // Nombre del encargado, lo puedes obtener de un campo o dejarlo estático por ahora
+    const encargado = 'NombreEncargado';  // Esto debería ser dinámico según tus datos, por ejemplo, del login del usuario.
+    const activa = true;
+
+    // Verifica que todos los datos requeridos estén presentes
+    if (!selectedLab || !selectedDate || !selectedTime || !selectedDesk) {
+        alert('Por favor, completa todos los detalles de la reserva.');
+        return;
+    }
+
+    // Crear un objeto con los datos de la reserva
+    const reservaData = {
+        lab: selectedLab,
+        date: selectedDate,
+        time: selectedTime,
+        desk: selectedDesk,
+        encargado: encargado,
+        activa: activa,
+        companion: companionEmail || null  // Si el email está vacío, lo enviamos como null
+    };
+
+    // Enviar los datos al servidor
+    fetch('reservasEstu.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reservaData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Reserva confirmada');
+            console.log(reservaData);  // Verifica que los datos están correctos
+            obtenerEscritoriosOcupados();  // Para actualizar los espacios ocupados
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+    
+
+});

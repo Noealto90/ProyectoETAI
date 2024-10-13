@@ -145,46 +145,38 @@ button:hover {
     margin-top: 20px;
 }
 
+
+/* Contenedor que mostrará los espacios de trabajo */
 .workspace-grid {
     display: flex;
-    flex-direction: column; /* Organizar las filas en una columna */
-    gap: 20px; /* Espacio entre las dos filas */
-    width: 100%; /* Asegurar que ocupe todo el ancho */
+    flex-wrap: wrap; /* Permite que los espacios de trabajo se ajusten en varias filas */
+    gap: 10px; /* Añade espacio entre los elementos */
+    justify-content: center; /* Centra los espacios en el contenedor */
 }
-
 
 .workspace {
     background-color: #6398e2;
     color: white;
-    text-align: left; /* Alinea el texto a la izquierda */
-    margin-top: 20px; /* Aumenta el espacio entre el título y los espacios de trabajo */
-    padding-left: 10px; /* Añadir espacio a la izquierda */
-    padding-right: 5px; /* Reducir el padding derecho */
+    text-align: center;
+    padding: 10px;
     border-radius: 5px;
     cursor: pointer;
-    width: calc(10% - 10px);
-    height: 80px;
-    margin: 0; /* Elimina márgenes externos si existen */
+    width: 100px; /* Define un ancho fijo para los espacios */
+    height: 80px; /* Define una altura fija para los espacios */
     display: flex;
-    align-items: center; /* Centra verticalmente el texto */
-    position: relative;
+    justify-content: center;
+    align-items: center;
 }
 
-
-
-.row {
-    display: flex;
-    justify-content: space-between; /* Distribuir escritorios en cada fila */
-    gap: 10px; /* Espacio entre escritorios */
+.workspace.occupied {
+    background-color: red;
+    cursor: not-allowed;
 }
 
 .workspace.selected {
     background-color: #002D6D;
 }
-.workspace.occupied {
-    background-color: red;
-    cursor: not-allowed;
-}
+
 
 .occupied {
     background-color: red;
