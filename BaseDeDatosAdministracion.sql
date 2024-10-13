@@ -37,6 +37,38 @@ CREATE TABLE sillas (
     laboratorio_id INT REFERENCES laboratorios(id) ON DELETE CASCADE
 );
 
+CREATE TABLE espacios (
+    laboratorio_id INT REFERENCES laboratorios(id) ON DELETE CASCADE,  -- Relación con la tabla laboratorios
+    espacio_id INT NOT NULL CHECK (espacio_id BETWEEN 1 AND 22),  -- Los espacios están limitados del 1 al 22
+    activa BOOLEAN DEFAULT TRUE,  -- Campo que indica si el espacio está activo
+    PRIMARY KEY (laboratorio_id, espacio_id)  -- Clave primaria compuesta por laboratorio y espacio
+);
+
+
+CREATE TABLE reservas (
+    id SERIAL PRIMARY KEY,  -- Identificador único para cada reserva
+    laboratorio_id INT REFERENCES laboratorios(id) ON DELETE CASCADE,  -- Relación con la tabla de laboratorios
+    espacio_id INT,  -- Relación con la tabla de espacios (id del espacio)
+    nombreEncargado VARCHAR(100) NULL,  -- Nombre del encargado, puede ser NULL
+    nombreAcompanante VARCHAR(100) NULL,  -- Nombre del acompañante, puede ser NULL
+    horaInicio TIME NOT NULL,  -- Hora de inicio de la reserva
+    horaFinal TIME GENERATED ALWAYS AS (horaInicio + INTERVAL '3 hours') STORED,  -- Hora final calculada automáticamente
+    dia DATE NOT NULL,  -- Fecha de la reserva
+    activa BOOLEAN DEFAULT TRUE,  -- Campo que indica si la reserva está activa o no
+    UNIQUE (laboratorio_id, espacio_id, dia, horaInicio),  -- Restricción para evitar reservas duplicadas en el mismo espacio y hora
+    CONSTRAINT fk_espacio_reserva FOREIGN KEY (laboratorio_id, espacio_id)
+    REFERENCES espacios(laboratorio_id, espacio_id) ON DELETE RESTRICT  -- Relación con la tabla espacios
+);
+
+
+
+
+
+
+
+
+
+
 --Datos de prueba: 
 
 INSERT INTO usuarios (nombre, correo_institucional, contrasena) VALUES
@@ -52,23 +84,76 @@ INSERT INTO laboratorios (nombre, capacidad) VALUES
 ('Laboratorio #1', 30),
 ('Laboratorio #2', 25);
 
-
 INSERT INTO computadoras (codigo, laboratorio_id) VALUES
 ('PC-INF-01', 1),
 ('PC-INF-02', 1),
 ('PC-ELC-01', 2);
 
-
 INSERT INTO mesas (codigo, laboratorio_id) VALUES
 ('MESA-INF-01', 1),
 ('MESA-INF-02', 1),
 ('MESA-ELC-01', 2);
-
-
 INSERT INTO sillas (codigo, laboratorio_id) VALUES
 ('SILLA-INF-01', 1),
 ('SILLA-INF-02', 1),
 ('SILLA-ELC-01', 2);
+
+
+
+-- Espacios para el laboratorio 1
+
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 1, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 2, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 3, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 4, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 5, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 6, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 7, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 8, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 9, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 10, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 11, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 12, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 13, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 14, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 15, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 16, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 17, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 18, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 19, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 20, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 21, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (1, 22, TRUE);
+
+-- Espacios para el laboratorio 2
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 1, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 2, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 3, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 4, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 5, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 6, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 7, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 8, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 9, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 10, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 11, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 12, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 13, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 14, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 15, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 16, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 17, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 18, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 19, TRUE);
+INSERT INTO espacios (laboratorio_id, espacio_id, activa) VALUES (2, 20, TRUE);
+
+
+
+
+
+select * from usuarios;
+select * from espacios;
+select * from reservas;
 
 
 select * from laboratorios;
@@ -77,8 +162,10 @@ select * from mesas;
 select * from sillas;
 select * from usuarios;
 
+select * from reservas
+select actualizar_reservas_pasadas()
 
-
+select agregar_reserva(null, null, lab, hora ini, dia, escritorio)
 --Prueba de conexion
 CREATE USER proyecto2 WITH PASSWORD 'Proyecto123';
 GRANT ALL PRIVILEGES ON DATABASE administracion TO proyecto2;
@@ -88,6 +175,64 @@ GRANT ALL PRIVILEGES ON DATABASE administracion TO proyecto2;
 
 
 -- FUNCIONES
+
+--FUNCIONES DE RESERVAS
+
+CREATE OR REPLACE FUNCTION agregar_reserva(
+    _nombre_encargado VARCHAR,
+    _nombre_acompanante VARCHAR,
+    _laboratorio_id INT,
+    _hora_inicio TIME,
+    _dia DATE,
+    _escritorio CHAR(1)
+)
+RETURNS VOID AS $$
+DECLARE
+    conflicto INT;
+BEGIN
+    -- Verifica si hay conflicto con otra reserva (estado = 1: prestado)
+    SELECT COUNT(*)
+    INTO conflicto
+    FROM reservas
+    WHERE laboratorio_id = _laboratorio_id
+    AND escritorio = _escritorio
+    AND dia = _dia
+    AND estado = 1
+    AND (
+        (_hora_inicio BETWEEN hora_inicio AND hora_final)
+        OR (hora_inicio BETWEEN _hora_inicio AND _hora_inicio + INTERVAL '3 hours')
+    );
+
+    IF conflicto > 0 THEN
+        RAISE EXCEPTION 'El escritorio ya está reservado en ese horario.';
+    ELSE
+        -- Inserta la nueva reserva
+        INSERT INTO reservas (nombre_encargado, nombre_acompanante, laboratorio_id, hora_inicio, dia, escritorio, estado)
+        VALUES (_nombre_encargado, _nombre_acompanante, _laboratorio_id, _hora_inicio, _dia, _escritorio, 1);
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+--A esta en buena teoria deberia recibir el nombre del encargado
+--y obtener el nombre desde el login para asegurarnos que la persona encargada lo devuelva
+CREATE OR REPLACE FUNCTION borrar_reserva(
+    _laboratorio_id INT,
+    _escritorio CHAR(1),
+    _dia DATE
+)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE reservas
+    SET estado = 0 -- Estado 0 = no prestado
+    WHERE laboratorio_id = _laboratorio_id
+    AND escritorio = _escritorio
+    AND dia = _dia
+    AND estado = 1; -- Solo si estaba prestado
+END;
+$$ LANGUAGE plpgsql;
+
 
 -- Agregar un Laboratorio
 CREATE OR REPLACE FUNCTION agregar_laboratorio(
@@ -100,6 +245,15 @@ BEGIN
     VALUES (p_nombre, p_capacidad);
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+
+
+
+
+
+
 
 -- Modificar un laboratorio
 CREATE OR REPLACE FUNCTION modificar_laboratorio(
