@@ -10,6 +10,7 @@
 
 <header>
     <h1>Panel del Super Administrador</h1>
+    <p>Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?></p> <!-- Muestra el nombre del usuario -->
 </header>
 
 <div class="container">
@@ -23,11 +24,15 @@
     </div>
     <div class="card">
         <h2>Realizar Reservas</h2>
-        <a href="#">Reservar</a>
+        <a href="ReservasSuperAdmin.html">Reservar</a>
     </div>
     <div class="card">
         <h2>Reportes de Daños</h2>
         <a href="#">Reportar Daño</a>
+    </div>
+    <div class="card">
+        <h2>Administrar Reservas</h2>
+        <a href="VerReservasSuperAdmin.php">Ver Reservas</a>
     </div>
 </div>
 

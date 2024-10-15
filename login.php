@@ -22,23 +22,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->execute();
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Verifica si el usuario existe y si la contraseña es correcta
+           // Verifica si el usuario existe y si la contraseña es correcta
             if ($usuario && password_verify($password, $usuario['contrasena'])) {
-                // Credenciales correctas: guarda la sesión del usuario
+                // Guarda el nombre del usuario en la sesión
                 $_SESSION['usuario'] = $usuario['correo_institucional'];
+                $_SESSION['nombre'] = $usuario['nombre']; // Guardamos el nombre
                 $_SESSION['rol'] = $usuario['rol']; // Almacena el rol en la sesión
 
                 // Redirige al usuario basado en el rol
                 if ($usuario['rol'] == 'estudiante') {
                     header('Location: indexEstudiante.html');
                 } elseif ($usuario['rol'] == 'superAdmin') {
-                    header('Location: superAdmin.html');
+                    header('Location: superAdmin.php'); // Cambia a PHP para usar la sesión
+                } elseif ($usuario['rol'] == 'profesor') {
+                    header('Location: profesor.php'); // Cambia a PHP para usar la sesión
                 } else {
                     echo "Rol no válido.";
                 }
-
                 exit(); // Detener el script después de la redirección
-            } else {
+            }
+            else {
                 echo "Correo o contraseña incorrectos.";
             }
         } else {

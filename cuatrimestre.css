@@ -1,0 +1,101 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff; /* Fondo blanco */
+    color: #2c3e50; /* Texto azul oscuro */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  header {
+    background-color: #003366; /* Azul oscuro */
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  header h1 {
+    margin: 0;
+    font-size: 2em;
+    color: #ffffff;
+  }
+  
+  .container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinea hacia arriba */
+    padding-top: 30px; /* Separa el formulario del borde superior */
+    padding-bottom: 20px;
+  }
+  
+  .form-card {
+    background-color: #66cc33; /* Verde del logo */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    width: 320px;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .form-card:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    background-color: #5ba828; /* Verde más oscuro */
+  }
+  
+  .form-card h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #003366;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  
+  .form-group input, 
+  .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-top: 5px;
+  }
+  
+  .btn-confirm {
+    width: 100%;
+    padding: 12px;
+    background-color: #ffcc00; /* Amarillo */
+    color: #003366; /* Azul oscuro */
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .btn-confirm:hover {
+    background-color: #003366; /* Azul oscuro */
+    color: #ffffff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  footer {
+    background-color: #002D6D;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  

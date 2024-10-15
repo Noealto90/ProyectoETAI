@@ -1,29 +1,16 @@
 <?php
-require 'conexion.php'; // Incluye el archivo de conexión
+// superAdmin.php
 
-// Verifica la conexión
-$con = new Conexion(); // Instancia de la clase conexión
-$pdo = $con->getConexion();
+session_start(); // Inicia la sesión
 
-$mensaje = "";
-
-// Verifica si la conexión es exitosa
-if ($pdo != null) {
-    $mensaje = "Conexión exitosa a la base de datos.";
-} else {
-    $mensaje = "No se pudo establecer la conexión a la base de datos.";
+// Verifica si el usuario está autenticado y si tiene el rol de 'superAdmin'
+if (!isset($_SESSION['nombre']) || $_SESSION['rol'] != 'superAdmin') {
+    header('Location: login.php'); // Redirige si no tiene acceso
+    exit();
 }
-?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba de Conexión a la Base de Datos</title>
-</head>
-<body>
-    <h1>Estado de la Conexión</h1>
-    <p><?php echo $mensaje; // Muestra el mensaje de la conexión ?></p>
-</body>
-</html>
+// Recupera el nombre del usuario
+$nombreUsuario = $_SESSION['nombre'];
+
+// Incluye el archivo HTML separado
+include 'superAdmin.html';

@@ -3,94 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestión de Equipos</title>
+    <title>Inicio Estudiante</title>
     <style>
         /* Estilos globales */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff; /* Color azul claro de fondo */
-            color: #002D6D;
             margin: 0;
-            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff; /* Fondo blanco */
+            color: #2c3e50; /* Texto azul oscuro */
         }
 
         header {
-            background-color: #002D6D; /* Azul oscuro */
-            color: white;
-            padding: 20px;
+            background-color: #003366; /* Azul oscuro */
+            padding: 30px;
             text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
+        header h1 {
             margin: 0;
+            font-size: 2.5em;
+            letter-spacing: 2px;
+            color: #ffffff; /* Texto blanco */
         }
 
-        nav {
-            margin: 0;
-            padding: 0;
-            background-color: #58B947; /* Verde claro */
-        }
-
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        nav ul li {
-            margin: 0;
-            padding: 0;
-        }
-
-        nav ul li a {
-            display: block;
-            padding: 15px 30px;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            background-color: #2c3e50; /* Azul oscuro */
-        }
-
-        /* Sección principal */
         .container {
-            padding: 50px 20px;
-            text-align: center;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding: 50px;
         }
 
-        .container h2 {
-            color: #2c3e50;
-            margin-bottom: 30px;
-        }
-
-        /* Botones */
-        .button {
-            background-color: #002D6D; /* Azul */
-            border: none;
-            color: white;
-            padding: 15px 30px;
+        .card {
+            background-color: #66cc33; /* Verde claro */
+            width: 220px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
             margin: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
         }
 
-        .button:hover {
-            background-color: #002D6D; /* Azul más oscuro */
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            background-color: #558b2f; /* Verde más oscuro */
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            color: #003366; /* Texto azul oscuro */
+        }
+
+        .card a {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #ffcc00; /* Amarillo del punto de la "i" */
+            color: #003366; /* Texto azul oscuro */
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card a:hover {
+            background-color: #003366; /* Azul oscuro */
+            color: #ffffff; /* Texto blanco */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         /* Footer */
         footer {
-            background-color: #2c3e50;
+            background-color: #002D6D;
             color: white;
             text-align: center;
             padding: 10px;
@@ -101,19 +87,29 @@
     </style>
 </head>
 <body>
+
     <header>
         <h1>Inicio Estudiante</h1>
     </header>
 
     <div class="container">
-        <h2>Seleccione una opción del menú </h2>
-        <a href="reservasEstu.html" class="button">Reservar Espacio</a>
-        <a href="Reporte.html" class="button">Reporte Daños</a>
-        <a href="Renovar.html" class="button">Renovar Espacio</a>
+        <div class="card">
+            <h2>Reservar un Espacio</h2>
+            <a href="reservasEstu.html">Reservar</a>
+        </div>
+        <div class="card">
+            <h2>Reporte de Daños</h2>
+            <a href="Reporte.html">Reportar</a>
+        </div>
+        <div class="card">
+            <h2>Renovar el Espacio</h2>
+            <a href="Renovar.html">Renovar</a>
+        </div>
     </div>
 
     <footer>
-        <p>© 2024 Sistema de Gestion de Estudiantes</p>
+        <p>© 2024 Sistema de Gestión de Estudiantes</p>
     </footer>
+
 </body>
 </html>
