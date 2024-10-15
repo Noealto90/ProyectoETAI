@@ -15,13 +15,68 @@
 
 <div class="container">
     <h2>Listado de Reservas</h2>
-    <!-- Aquí podrías agregar código para mostrar las reservas del sistema -->
-    <p>Aquí se mostrarán las reservas realizadas.</p>
+    <div class="reservas">
+        <?php if (!empty($reservas)): ?>
+            <?php foreach ($reservas as $reserva): ?>
+                <div class="card">
+                    <h3>Laboratorio: <?php echo htmlspecialchars($reserva['laboratorio_id']); ?></h3>
+                    <!-- Cambiar las claves a minúsculas para que coincidan con las del array -->
+                    <p>Laboratorio: <?php echo htmlspecialchars($reserva['laboratorio_id']); ?></p>
+                    <p>Espacio: <?php echo htmlspecialchars($reserva['espacio_id']); ?></p>
+                    <p>Hora Inicio: <?php echo isset($reserva['horainicio']) ? htmlspecialchars($reserva['horainicio']) : 'No especificada'; ?></p>
+                    <p>Hora Final: <?php echo isset($reserva['horafinal']) ? htmlspecialchars($reserva['horafinal']) : 'No especificada'; ?></p>
+                    <p>Día: <?php echo htmlspecialchars($reserva['dia']); ?></p>
+                    <p>Acompañante: <?php echo !empty($reserva['nombreacompanante']) ? htmlspecialchars($reserva['nombreacompanante']) : 'N/A'; ?></p>
+                    <p>Estado: <?php echo $reserva['activa'] ? 'Activa' : 'Inactiva'; ?></p>
+
+                    <!-- Botón para cancelar la reserva con confirmación -->
+                    <form action="cancelarReserva.php" method="POST" onsubmit="return confirmarCancelacion()">
+                        <input type="hidden" name="id" value="<?php echo $reserva['id']; ?>">
+                        <button type="submit" class="cancel-btn">Cancelar Reserva</button>
+                    </form>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No se encontraron reservas para este usuario.</p>
+        <?php endif; ?>
+    </div>
 </div>
 
 <footer>
     <p>© 2024 Super Administrador - Todos los derechos reservados</p>
 </footer>
+
+<?php if (isset($_GET['mensaje'])): ?>
+    <div id="notification" class="notification <?php echo $_GET['mensaje'] == 'exito' ? '' : 'error'; ?>">
+        <?php
+        switch ($_GET['mensaje']) {
+            case 'exito':
+                echo 'Reserva cancelada con éxito.';
+                break;
+            case 'no_encontrada':
+                echo 'No se encontró la reserva o ya estaba cancelada.';
+                break;
+            case 'error':
+                echo 'Hubo un error al cancelar la reserva.';
+                break;
+            case 'falta_id':
+                echo 'No se proporcionó un ID de reserva.';
+                break;
+        }
+        ?>
+    </div>
+    <script>
+        // Mostrar la notificación
+        const notification = document.getElementById('notification');
+        notification.classList.add('show');
+        
+        // Ocultar la notificación después de 3 segundos
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    </script>
+<?php endif; ?>
+
 
 </body>
 </html>

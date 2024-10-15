@@ -15,6 +15,23 @@ if (!isset($_SESSION['nombre']) || $_SESSION['rol'] != 'superAdmin') {
 // Recupera el nombre del usuario y rol
 $nombreUsuario = $_SESSION['nombre'];
 
+// Conexión a la base de datos
+include 'conexionEstu.php';  // Asegúrate de que el archivo existe y la variable $pdo esté correctamente definida
+
+
+// Consulta las reservas del responsable
+$sql = "SELECT id, laboratorio_id, espacio_id, nombreEncargado, nombreAcompanante, horaInicio, horaFinal, dia, activa 
+        FROM reservas 
+        WHERE nombreEncargado = :nombreUsuario 
+        AND activa = true";
+
+$stmt = $pdo->prepare($sql);
+$stmt->bindParam(':nombreUsuario', $nombreUsuario);
+$stmt->execute();
+$reservas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+
 // Incluye el archivo HTML con el nombre del usuario
 include 'VerReservasSuperAdmin.html';
 ?>

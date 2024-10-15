@@ -27,4 +27,5 @@ if ($con->getConexion() != null) {
     echo "Error al conectarse a la base de datos";
 }
 
+
 ?>
