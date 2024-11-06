@@ -45,6 +45,10 @@ CREATE TABLE espacios (
 );
 
 
+
+--Añadirle lo del rol, añadirle lo de tipo de reserva
+
+
 CREATE TABLE reservas (
     id SERIAL PRIMARY KEY,  -- Identificador único para cada reserva
     laboratorio_id INT REFERENCES laboratorios(id) ON DELETE CASCADE,  -- Relación con la tabla de laboratorios
@@ -55,7 +59,6 @@ CREATE TABLE reservas (
     horaFinal TIME GENERATED ALWAYS AS (horaInicio + INTERVAL '3 hours') STORED,  -- Hora final calculada automáticamente
     dia DATE NOT NULL,  -- Fecha de la reserva
     activa BOOLEAN DEFAULT TRUE,  -- Campo que indica si la reserva está activa o no
-    UNIQUE (laboratorio_id, espacio_id, dia, horaInicio),  -- Restricción para evitar reservas duplicadas en el mismo espacio y hora
     CONSTRAINT fk_espacio_reserva FOREIGN KEY (laboratorio_id, espacio_id)
     REFERENCES espacios(laboratorio_id, espacio_id) ON DELETE RESTRICT  -- Relación con la tabla espacios
 );
@@ -63,13 +66,204 @@ CREATE TABLE reservas (
 
 
 
+select * from reservas
+
+
+select * from reservas
 
 
 
 
+UPDATE usuarios
+SET rol = 'superAdmin' 
+WHERE id = 8; -- Reemplaza 'id_del_usuario' con el id del usuario específico
+
+
+
+
+
+--
 
 
 --Datos de prueba: 
+
+select * from usuarios
+select * from reservas
+--Insertar usuarios con rol de profesor para probar la interfaz de cuatrimestre con su conexion
+
+Carlos Gómez --Profesor
+
+Luis Fernando --Estudiante
+
+Emma Lopez --SuperAdmin
+
+select * from reservas
+DELETE FROM reservas
+
+INSERT INTO reservas (laboratorio_id, espacio_id, nombreEncargado, horaInicio, dia)
+VALUES (1, 11, 'Luis Fernando', '10:00:00', '2024-10-15');
+
+INSERT INTO reservas (laboratorio_id, espacio_id, nombreEncargado, horaInicio, dia)
+VALUES (1, 12, 'Emma Lopez', '10:00:00', '2024-10-15');
+
+SELECT realizar_reserva(1, 11, 'Carlos Gómez', '10:00:00', '13:00:00', '2024-10-15', 'profesor');
+
+-- Crea Una funcion para que si un administrador o profesor realice una reserva, con la hora inicio, hora final, dia,
+--1. Busque si dentro de ese rango de tiempo alguna de las reservas esta activa: true
+--2. De las que estan true busque si alguno de los nombreEncargado son de rol profesor, administrador o superAdmin (Basate en la tabla usuarios)
+--3. En caso de que no haya ninguna reserva hecha por alguien de ese rol entonces que busque si hay alguna reserva en ese rango de tiempo hecha 
+--por un estudiante y si la hay entonces que la marque como false la del estudiante, para que se pueda realizar la reserva
+--4. Realice la reserva.
+--5. Si en el punto 2, hay una reserva previa por alguno de esos roles: profesor, administrador o superAdmin no permita la reserva, pero si es estudiante si
+ 
+
+
+
+
+
+
+
+
+
+
+select * from espacios
+
+--activa = false = OCUPADO
+
+
+select * from reservas
+
+--activa = true = RESERVADO
+
+
+
+--Crear una funcion que me ponga en la columna activa todos como true en la tabla espacios
+
+CREATE OR REPLACE FUNCTION activar_espacios()
+RETURNS VOID AS $$
+BEGIN
+    UPDATE espacios
+    SET activa = TRUE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+SELECT activar_espacios();
+select * from espacios
+
+
+--Funcion que me busque en la tabla de reservas las que dentro de un rango de fecha, se recibe solo una la de inicio la final es la de inicio + 3 horas y si hay reservas con activa = false entonces que el espacio_id de esa reserva lo busque en la tabla espacios y lo marque como false
+CREATE OR REPLACE FUNCTION desactivar_espacios_por_reservas(dia DATE, inicio TIME)
+RETURNS VOID AS $$
+BEGIN
+    -- Actualizar los espacios según las reservas dentro del rango de día y hora
+    UPDATE espacios e
+    SET activa = false
+    FROM reservas r
+    WHERE r.espacio_id = e.espacio_id
+      AND r.laboratorio_id = e.laboratorio_id
+      AND r.activa = true
+      AND r.diaR = dia  -- Usar el nombre correcto de la columna `dia`
+      -- Verificar que la hora de inicio o la hora final de la reserva estén dentro del rango de 3 horas desde `inicio`
+      AND (r.horaInicio < (inicio + INTERVAL '3 hours') AND (r.horaFinal > inicio));
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+SELECT activar_espacios();
+SELECT desactivar_espacios_por_reservas('2024-10-15', '09:00:00');
+
+
+select * from reservas
+
+ALTER TABLE reservas
+RENAME COLUMN dia TO diaR;
+
+
+select * from espacios where activa = false
+
+update reservas set activa = false where id = 66;
+
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION realizar_reserva(
+    p_dia DATE,
+    p_hora_inicio TIME,
+    p_hora_final TIME,
+    p_correo_profesor VARCHAR,
+    p_laboratorio_id INT
+) RETURNS VOID AS $$
+BEGIN
+    -- 1. Inactivar todas las reservas activas conflictantes en el mismo rango de tiempo y laboratorio
+    UPDATE reservas
+    SET activa = FALSE
+    WHERE dia = p_dia
+      AND horainicio < p_hora_final
+      AND horafinal > p_hora_inicio
+      AND laboratorio_id = p_laboratorio_id
+      AND activa = TRUE;
+
+    -- 2. Insertar la nueva reserva sin especificar horafinal
+    INSERT INTO reservas (dia, horainicio, nombreEncargado, laboratorio_id, activa)
+    VALUES (p_dia, p_hora_inicio, p_correo_profesor, p_laboratorio_id, TRUE);
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+SELECT realizar_reserva(
+    '2024-10-16',        -- Día de la reserva
+    '9:00',              -- Hora de inicio
+    '10:00',             -- Hora de finalización
+    'profesor@institucion.com',  -- Correo del profesor
+    1                    -- ID del laboratorio (Laboratorio 1)
+);
+
+
+delete 
+select * from reservas
+
+delete from reservas where id = 69
+
+INSERT INTO reservas (diaR, horainicio, nombreEncargado, laboratorio_id, activa, espacio_id)
+VALUES ('2024-11-11', '10:00', 'Emma Trece', 1, TRUE, 9);
+
+INSERT INTO reservas (diaR, horainicio, nombreEncargado, laboratorio_id, activa)
+VALUES ('2024-11-02', '20:00', 'estudiante@institucion.com', 1, TRUE);
+
+INSERT INTO reservas (dia, horainicio, nombreEncargado, laboratorio_id, activa)
+VALUES ('2024-10-16', '11:00', 'estudiante@institucion.com', 1, TRUE);
+
+
+SELECT realizar_reserva(
+    '2024-10-16'::DATE,        -- Día de la reserva
+    '9:00'::TIME,              -- Hora de inicio
+    '12:00'::TIME,             -- Hora de finalización
+    'profesor@institucion.com'::VARCHAR,  -- Correo del usuario que realiza la reserva
+    1::INT                     -- ID del laboratorio (Laboratorio 1)
+);
+
+
+
+
+select * from reservas
+
+
+
+
+
+
+
+
 
 INSERT INTO usuarios (nombre, correo_institucional, contrasena) VALUES
 ('Carlos Gómez', 'cgomez@etai.ac.cr', 'claveSegura123'),
@@ -228,7 +422,7 @@ BEGIN
     SET estado = 0 -- Estado 0 = no prestado
     WHERE laboratorio_id = _laboratorio_id
     AND escritorio = _escritorio
-    AND dia = _dia
+    AND diaR = _dia
     AND estado = 1; -- Solo si estaba prestado
 END;
 $$ LANGUAGE plpgsql;
@@ -251,7 +445,7 @@ $$ LANGUAGE plpgsql;
 
 
 
-
+select * from usuarios
 
 
 
@@ -281,8 +475,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
---  Agregar persona (verificando correo y duplicados)
+
+
+
 CREATE OR REPLACE FUNCTION agregar_persona(
+    p_nombre VARCHAR(100),
     p_correo_institucional VARCHAR(255),
     p_contrasena VARCHAR(255)
 )
@@ -301,12 +498,13 @@ BEGIN
     END IF;
 
     -- Insertar nueva persona
-    INSERT INTO usuarios (correo_institucional, contrasena)
-    VALUES (p_correo_institucional, p_contrasena);
+    INSERT INTO usuarios (nombre, correo_institucional, contrasena)
+    VALUES (p_nombre, p_correo_institucional, p_contrasena);
     
     RETURN 'Usuario agregado correctamente.';
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 CREATE OR REPLACE FUNCTION insertar_equipo(tipo_equipo TEXT, codigo_equipo VARCHAR, laboratorio_id INT)
