@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ver Reservas - Super Administrador</title>
-    <link rel="stylesheet" href="VerReservasSuperAdmin.css">
+    <title>Ver Reservas - Estudiante</title>
+    <link rel="stylesheet" href="VerReservasEstudiante.css">
 </head>
 <body>
 
 <header>
-    <h1>Reservas del Super Administrador</h1>
-    <p>Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?></p> <!-- Muestra el nombre del usuario -->
+    <h1>Reservas del Estudiante</h1>
+    <p>Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?></p>
 </header>
 
 <div class="container">
@@ -20,16 +20,12 @@
             <?php foreach ($reservas as $reserva): ?>
                 <div class="card">
                     <h3>Laboratorio: <?php echo htmlspecialchars($reserva['laboratorio_id']); ?></h3>
-                    <!-- Cambiar las claves a minúsculas para que coincidan con las del array -->
-                    <p>Laboratorio: <?php echo htmlspecialchars($reserva['laboratorio_id']); ?></p>
-                    <p>Espacio: <?php echo htmlspecialchars($reserva['espacio_id']); ?></p>
-                    <p>Hora Inicio: <?php echo isset($reserva['horainicio']) ? htmlspecialchars($reserva['horainicio']) : 'No especificada'; ?></p>
-                    <p>Hora Final: <?php echo isset($reserva['horafinal']) ? htmlspecialchars($reserva['horafinal']) : 'No especificada'; ?></p>
-                    <p>Día: <?php echo htmlspecialchars($reserva['diar']); ?></p>
-                    <p>Acompañante: <?php echo !empty($reserva['nombreacompanante']) ? htmlspecialchars($reserva['nombreacompanante']) : 'N/A'; ?></p>
-                    <p>Estado: <?php echo $reserva['activa'] ? 'Activa' : 'Inactiva'; ?></p>
-
-                    <!-- Botón para cancelar la reserva con confirmación -->
+                    <p><strong>Espacio:</strong> <?php echo htmlspecialchars($reserva['espacio_id']); ?></p>
+                    <p><strong>Hora Inicio:</strong> <?php echo isset($reserva['horainicio']) ? htmlspecialchars($reserva['horainicio']) : 'No especificada'; ?></p>
+                    <p><strong>Hora Final:</strong> <?php echo isset($reserva['horafinal']) ? htmlspecialchars($reserva['horafinal']) : 'No especificada'; ?></p>
+                    <p><strong>Día:</strong> <?php echo isset($reserva['diar']) ? htmlspecialchars($reserva['diar']) : 'No especificado'; ?></p>
+                    <p><strong>Acompañante:</strong> <?php echo !empty($reserva['nombreacompanante']) ? htmlspecialchars($reserva['nombreacompanante']) : 'N/A'; ?></p>
+                    <p><strong>Estado:</strong> <?php echo $reserva['activa'] ? 'Activa' : 'Inactiva'; ?></p>
                     <form action="cancelarReserva.php" method="POST" onsubmit="return confirmarCancelacion()">
                         <input type="hidden" name="id" value="<?php echo $reserva['id']; ?>">
                         <button type="submit" class="cancel-btn">Cancelar Reserva</button>
@@ -43,7 +39,7 @@
 </div>
 
 <footer>
-    <p>© 2024 Super Administrador - Todos los derechos reservados</p>
+    <p>© 2024 Estudiantes - Todos los derechos reservados</p>
 </footer>
 
 <?php if (isset($_GET['mensaje'])): ?>
@@ -66,17 +62,14 @@
         ?>
     </div>
     <script>
-        // Mostrar la notificación
         const notification = document.getElementById('notification');
         notification.classList.add('show');
         
-        // Ocultar la notificación después de 3 segundos
         setTimeout(() => {
             notification.classList.remove('show');
         }, 3000);
     </script>
 <?php endif; ?>
-
 
 </body>
 </html>

@@ -28,10 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['usuario'] = $usuario['correo_institucional'];
                 $_SESSION['nombre'] = $usuario['nombre']; // Guardamos el nombre
                 $_SESSION['rol'] = $usuario['rol']; // Almacena el rol en la sesión
+                
 
                 // Redirige al usuario basado en el rol
                 if ($usuario['rol'] == 'estudiante') {
-                    header('Location: indexEstudiante.html');
+                    header('Location: indexEstudiante.php');
                 } elseif ($usuario['rol'] == 'superAdmin') {
                     header('Location: superAdmin.php'); // Cambia a PHP para usar la sesión
                 } elseif ($usuario['rol'] == 'profesor') {

@@ -84,12 +84,16 @@
             width: 100%;
             bottom: 0;
         }
+        header p{
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>Inicio Estudiante</h1>
+        <p>Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?></p> <!-- Muestra el nombre del usuario -->
     </header>
 
     <div class="container">
@@ -100,6 +104,10 @@
         <div class="card">
             <h2>Reporte de Daños</h2>
             <a href="Reporte.html">Reportar</a>
+        </div>
+        <div class="card">
+            <h2>Ver Reservas Activas</h2>
+            <a href="VerReservasEstudiante.php">Ver Reservas</a>
         </div>
         <div class="card">
             <h2>Renovar el Espacio</h2>

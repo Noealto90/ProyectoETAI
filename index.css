@@ -21,7 +21,7 @@ h1 {
 nav {
     margin: 0;
     padding: 0;
-    background-color: #58B947; /* Verde de la imagen */
+    background-color: #66cc33; /* Verde de la imagen */
 }
 
 nav ul {
@@ -81,7 +81,7 @@ nav ul li a:hover {
 
 /* Botones dentro de cada card */
 .button {
-    background-color: #58B947; /* Verde */
+    background-color: #66cc33; /* Verde */
     border: none;
     color: white;
     padding: 15px 30px;
@@ -94,7 +94,7 @@ nav ul li a:hover {
 }
 
 .button:hover {
-    background-color: #2A6C2C; /* Verde más oscuro */
+    background-color: #66cc33; /* Verde más oscuro */
 }
 
 /* Footer */

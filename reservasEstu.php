@@ -11,21 +11,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die(json_encode(['success' => false, 'message' => 'No se recibieron datos']));
     }
 
-    // Comprobar si se está solicitando los espacios para un laboratorio específico
-    if (isset($input['lab'])) {
-        $laboratorio_id = $input['lab'];  // Laboratorio seleccionado
-    
-        // Realizamos la consulta para obtener los espacios del laboratorio ordenados por espacio_id
-        $query = "SELECT espacio_id, activa FROM espacios WHERE laboratorio_id = :laboratorio_id ORDER BY espacio_id ASC";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute([':laboratorio_id' => $laboratorio_id]);
-    
-        // Obtenemos los espacios
-        $espacios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-        // Devolvemos los espacios al frontend
-        echo json_encode(['success' => true, 'espacios' => $espacios]);
-    }
+    try {
+        // Ejecutar primero activar_espacios()
+        $pdo->query("SELECT activar_espacios();");
+
+        // Ejecutar desactivar_espacios_por_reservas con la fecha y hora recibidas
+        $fecha = $input['date'] ?? '2024-10-15';
+        $hora = $input['time'] ?? '12:00:00';
+        $stmtDesactivar = $pdo->prepare("SELECT desactivar_espacios_por_reservas(:fecha, :hora);");
+        $stmtDesactivar->execute([':fecha' => $fecha, ':hora' => $hora]);
+
+        if (isset($input['lab'])) {
+            $laboratorio_id = $input['lab'];
+            $query = "SELECT espacio_id, activa FROM espacios WHERE laboratorio_id = :laboratorio_id ORDER BY espacio_id ASC";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([':laboratorio_id' => $laboratorio_id]);
+            $espacios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            echo json_encode(['success' => true, 'espacios' => $espacios]);
+        }
     
 
     if (isset($input['lab']) && isset($input['date']) && isset($input['time']) && isset($input['desk'])) {
@@ -42,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $queryCheck = "SELECT COUNT(*) FROM reservas 
                            WHERE laboratorio_id = :laboratorio_id 
                            AND espacio_id = :espacio_id 
-                           AND dia = :fecha 
+                           AND diaR = :fecha 
                            AND horaInicio = :horaInicio";
     
             $stmtCheck = $pdo->prepare($queryCheck);
@@ -61,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
     
             // Insertamos los datos en la tabla reservas
-            $query = "INSERT INTO reservas (laboratorio_id, espacio_id, nombreEncargado, nombreAcompanante, horaInicio, dia, activa) 
+            $query = "INSERT INTO reservas (laboratorio_id, espacio_id, nombreEncargado, nombreAcompanante, horaInicio, diaR, activa) 
                       VALUES (:laboratorio_id, :espacio_id, :nombreEncargado, :nombreAcompanante, :horaInicio, :fecha, :activa)";
     
             $stmt = $pdo->prepare($query);
@@ -92,6 +96,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             error_log('Error de PDO: ' . $e->getMessage());
             echo json_encode(['success' => false, 'message' => 'Error al realizar la reserva: ' . $e->getMessage()]);
         }
+    }} catch (PDOException $e) {
+        error_log('Error de PDO: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Error en la operación: ' . $e->getMessage()]);
     }
 }
 ?>
