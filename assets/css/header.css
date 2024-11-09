@@ -1,0 +1,44 @@
+.user-menu {
+    position: absolute;
+    top: 3%;
+    right: 3%;
+    display: inline-block;
+}
+
+.user-menu .user-icon {
+    cursor: pointer;
+    font-size: 2.6em;
+    color: #002D6D;
+}
+
+.user-menu-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 5px;
+}
+
+.user-menu-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-menu-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.user-menu-content a i {
+    margin-right: 10px;
+}
+
+.user-menu:hover .user-menu-content {
+    display: block;
+}

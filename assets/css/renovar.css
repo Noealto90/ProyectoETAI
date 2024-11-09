@@ -1,0 +1,18 @@
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 18px;
+    color: #2c3e50;
+}
+
+input[type="text"], input[type="submit"] {
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 10px;
+    border: 1px solid #002D6D;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 400px;
+}

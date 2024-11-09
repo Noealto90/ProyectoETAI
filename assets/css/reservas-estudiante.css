@@ -1,0 +1,410 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General */
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Header */
+.header {
+    background-color: #002D6D;
+    color: white;
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* Step Content */
+.step-content1 {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin-top: 100px; /* Ajuste debajo del header */
+}
+
+/* Step Content */
+.step-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 80%;
+    margin-top: 35px; /* Ajuste debajo del header */
+}
+
+/* Calendar Container */
+.calendar-container {
+    flex: 1;
+}
+
+.time-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+input[type="time"] {
+    font-size: 18px;
+    padding: 10px;
+    width: 50%;
+}
+
+
+
+button {
+    margin-top: 60px;
+    font-size: 16px;
+    padding: 10px 20px;
+    background-color: #002D6D;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #004494;
+}
+
+/* Progress Bar */
+.progress-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 70px;
+    width: 80%;
+}
+
+.progress-bar {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.step {
+    text-align: center;
+    flex: 1;
+}
+
+.circle {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: #58B947;
+    color: white;
+    border-radius: 50%;
+    line-height: 30px;
+}
+
+.step.completed .circle {
+    background-color: #002D6D;
+}
+
+/* Paso 2: Workspace Container */
+.workspace-container {
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+
+/* Contenedor que mostrará los espacios de trabajo */
+.workspace-grid {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los espacios de trabajo se ajusten en varias filas */
+    gap: 10px; /* Añade espacio entre los elementos */
+    justify-content: center; /* Centra los espacios en el contenedor */
+}
+
+.workspace {
+    background-color: #6398e2;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100px; /* Define un ancho fijo para los espacios */
+    height: 80px; /* Define una altura fija para los espacios */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.workspace.occupied {
+    background-color: red;
+    cursor: not-allowed;
+}
+
+.workspace.selected {
+    background-color: #002D6D;
+}
+
+
+.occupied {
+    background-color: red;
+    pointer-events: none; /* Deshabilita la interacción con el escritorio ocupado */
+}
+
+
+/* Lab Selector */
+.lab-selector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.lab-selector select {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #002D6D;
+    color: white;
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.lab-selector select:focus {
+    outline: none; /* Elimina el contorno predeterminado del focus */
+    background-color: #004494; /* Color al enfocar */
+}
+
+.lab-selector select option {
+    background-color: #ffffff;
+    color: black;
+    padding: 10px; /* Espaciado interno para opciones */
+}
+
+/* Estilo para mejorar la experiencia de usuario */
+.lab-selector select option:hover {
+    background-color: #f0f0f0; /* Color de fondo al pasar el mouse */
+}
+
+.lab-selector select option:disabled {
+    color: #ccc; /* Color gris para la opción no seleccionable */
+}
+
+
+
+/* Step 3: Confirmación */
+.confirm-section {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 40px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.confirm-section h2 {
+    font-size: 28px;
+    color: #002D6D;
+    margin-bottom: 20px;
+}
+
+.instruction {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+/* Contenedor de detalles */
+.reservation-details {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 40px; /* Aumenta el margen inferior para mayor separación */
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0; /* Aumenta el padding para más separación */
+    border-bottom: 1px solid #ddd;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: #333;
+    font-size: 18px; /* Aumenta el tamaño de la etiqueta */
+}
+
+.detail-value {
+    color: #58B947;
+    font-weight: bold;
+    font-size: 20px; /* Aumenta el tamaño del valor */
+}
+
+/* Botones de acción */
+.action-buttons {
+    display: flex;
+    justify-content: space-between; /* Espacio igual entre los botones */
+    margin-top: 30px; /* Aumenta el margen superior para más separación */
+}
+
+.btn {
+    padding: 12px 25px;
+    font-size: 16px;
+    color: white;
+    background-color: #002D6D;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 48%; /* Asegura que los botones ocupen un ancho similar */
+}
+
+.confirm-btn {
+    background-color: #58B947;
+}
+
+.back-btn {
+    background-color: #002D6D;
+}
+
+.btn:hover {
+    background-color: #004494;
+}
+
+.confirm-btn:hover {
+    background-color: #4CAF50;
+}
+
+
+.step-2-buttons {
+    display: flex;
+    justify-content: space-between; /* Para que los botones estén a la par */
+    width: 100%; /* Asegura que los botones tomen todo el ancho disponible */
+    margin-top: 20px; /* Añade un poco de espacio superior si es necesario */
+}
+.back-button {
+    background-color: #808080; /* Color gris */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.back-button:hover, .continue-button:hover {
+    opacity: 0.8; /* Efecto hover para ambos botones */
+}
+
+/* Estilos para los toast notifications */
+.toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #4CAF50;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%); /* Centrando horizontalmente */
+    font-size: 25px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.toast.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+
+/* Estilos para la sección de añadir compañero */
+.add-companion {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#add-companion-btn {
+    background-color: #002D6D;
+    color: white;
+    padding: 10px 35px;
+    border: none;
+    margin-top: 70px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    width: 130px;
+    transition: background-color 0.3s ease;
+}
+
+#add-companion-btn:hover {
+    background-color: #004494;
+}
+
+#companion-input {
+    margin-top: 15px;
+    text-align: left;
+    display: none;
+}
+
+#companion-input label {
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+#companion-input input {
+    padding: 8px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
