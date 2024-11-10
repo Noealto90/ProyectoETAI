@@ -3,7 +3,7 @@ session_start();
 $title = "Reservas de Laboratorios ETAI";
 $headerTitle = "Reservas de Laboratorios ETAI";
 include '../templates/header.php';
-include '../templates/navbar.php';
+include '../templates/navbar_estudiante.php';
 ?>
 
 <div class="container">
@@ -47,8 +47,19 @@ include '../templates/navbar.php';
         <div class="lab-selector">
             <select id="lab-select" onchange="selectLab(this.value)">
                 <option value="" disabled selected>Selecciona un laboratorio</option>
-                <option value="1">Laboratorio #1</option>
-                <option value="2">Laboratorio #2</option>
+                <?php
+                // Obtener los laboratorios de la base de datos
+                require '../includes/conexion.php';
+                $con = new Conexion();
+                $pdo = $con->getConexion();
+                $query = "SELECT id, nombre FROM laboratorios";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute();
+                $laboratorios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($laboratorios as $laboratorio) {
+                    echo '<option value="' . htmlspecialchars($laboratorio['id']) . '">' . htmlspecialchars($laboratorio['nombre']) . '</option>';
+                }
+                ?>
             </select>
         </div>
 

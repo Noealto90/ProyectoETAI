@@ -1,66 +1,17 @@
 .container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Alinea hacia arriba */
-  padding-top: 30px; /* Separa el formulario del borde superior */
-  padding-bottom: 20px;
-}
-
-.form-card {
-  background-color: #66cc33; /* Verde del logo */
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  width: 320px;
-  transition: box-shadow 0.3s ease, background-color 0.3s ease;
-}
-
-.form-card:hover {
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-  background-color: #5ba828; /* Verde más oscuro */
-}
-
-.form-card h2 {
+  padding: 50px 20px;
   text-align: center;
-  margin-bottom: 15px;
-  color: #003366;
 }
 
-.form-group {
-  margin-bottom: 15px;
+.container > h2 {
+  font-size: 2em;
+  color: #003366; 
+  margin-top: -15px;
+  margin-bottom: 60px;
 }
 
-.form-group label {
+.formulario label {
   display: block;
-  margin-bottom: 8px;
+  margin: 15px 0 5px;
   font-weight: bold;
-}
-
-.form-group input, 
-.form-group select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-  margin-top: 5px;
-}
-
-.btn-confirm {
-  width: 100%;
-  padding: 12px;
-  background-color: #ffcc00; /* Amarillo */
-  color: #003366; /* Azul oscuro */
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.btn-confirm:hover {
-  background-color: #003366; /* Azul oscuro */
-  color: #ffffff;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }

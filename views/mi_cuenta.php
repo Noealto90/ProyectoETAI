@@ -3,7 +3,7 @@ session_start();
 $title = "Mi Cuenta";
 $headerTitle = "Mi Cuenta";
 include '../templates/header.php';
-include '../templates/navbar.php';
+include '../templates/navbar_super_admin.php';
 
 // Conexión a la base de datos
 require '../includes/conexion.php';

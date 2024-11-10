@@ -3,13 +3,35 @@ session_start();
 $title = "Reporte de Daños - Sistema de Gestión de Equipos";
 $headerTitle = "Reporte de Daños";
 include '../templates/header.php';
-include '../templates/navbar.php';
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['nombre']) || !isset($_SESSION['rol'])) {
+    header('Location: login.php');
+    exit();
+}
+
+// Incluir la barra de navegación correspondiente según el rol del usuario
+if ($_SESSION['rol'] == 'superAdmin') {
+    include '../templates/navbar_super_admin.php';
+} elseif ($_SESSION['rol'] == 'estudiante') {
+    include '../templates/navbar_estudiante.php';
+} else {
+    // Si el rol no es válido, redirigir al login
+    header('Location: login.php');
+    exit();
+}
 
 // Conexión a la base de datos
 require '../includes/conexion.php'; // Asegúrate de que el archivo existe y la variable $pdo esté correctamente definida
 
 $con = new Conexion();
 $pdo = $con->getConexion();
+
+// Obtener los laboratorios de la base de datos
+$query = "SELECT id, nombre FROM laboratorios";
+$stmt = $pdo->prepare($query);
+$stmt->execute();
+$laboratorios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Variables para almacenar errores y mensajes
 $errores = [];
@@ -94,8 +116,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="laboratorio">Laboratorio:</label>
             <select id="laboratorio" name="laboratorio">
                 <option value="">Seleccione un laboratorio</option>
-                <option value="1">Laboratorio 1</option>
-                <option value="2">Laboratorio 2</option>
+                <?php foreach ($laboratorios as $laboratorio): ?>
+                    <option value="<?php echo htmlspecialchars($laboratorio['id']); ?>">
+                        <?php echo htmlspecialchars($laboratorio['nombre']); ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
             <p id="error-laboratorio" class="error"></p>
         </div>

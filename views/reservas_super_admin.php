@@ -2,7 +2,7 @@
 $title = "Reservas";
 $headerTitle = "Reservas";
 include '../templates/header.php';
-include '../templates/navbar.php';
+include '../templates/navbar_super_admin.php';
 ?>
 
 <div class="reservation-container">

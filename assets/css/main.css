@@ -144,7 +144,7 @@ table th, table td {
     padding: 12px;
     text-align: left;
     text-align: center;
-    width: 100px;
+    width: 110px;
 }
 
 table th {
@@ -346,9 +346,80 @@ footer {
     margin-top: 20px;
 }
 
+
+/* Contenedor que mostrará los espacios de trabajo */
+.workspace-grid {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los espacios de trabajo se ajusten en varias filas */
+    gap: 10px; /* Añade espacio entre los elementos */
+    justify-content: center; /* Centra los espacios en el contenedor */
+}
+
+.workspace {
+    background-color: #6398e2;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100px; /* Define un ancho fijo para los espacios */
+    height: 80px; /* Define una altura fija para los espacios */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .workspace.occupied {
     background-color: red;
     cursor: not-allowed;
+}
+
+.workspace.selected {
+    background-color: #002D6D;
+}
+
+
+.occupied {
+    background-color: red;
+    pointer-events: none; /* Deshabilita la interacción con el escritorio ocupado */
+}
+
+
+/* Lab Selector */
+.lab-selector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.lab-selector select {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #002D6D;
+    color: white;
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.lab-selector select:focus {
+    outline: none; /* Elimina el contorno predeterminado del focus */
+    background-color: #004494; /* Color al enfocar */
+}
+
+.lab-selector select option {
+    background-color: #ffffff;
+    color: black;
+    padding: 10px; /* Espaciado interno para opciones */
+}
+
+/* Estilo para mejorar la experiencia de usuario */
+.lab-selector select option:hover {
+    background-color: #f0f0f0; /* Color de fondo al pasar el mouse */
+}
+
+.lab-selector select option:disabled {
+    color: #ccc; /* Color gris para la opción no seleccionable */
 }
 
 /* Estilos específicos para ReservasSuperAdmin */

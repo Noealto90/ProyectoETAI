@@ -1,11 +1,12 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
-include 'conexion_estudiante.php';
+require '../includes/conexion.php';
+
+// Crear la instancia de conexión y obtener el PDO
+$con = new Conexion();
+$pdo = $con->getConexion();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Definir $pdo como global
-    global $pdo;
-
     // Obtener los datos del formulario
     $dia = $_POST['dia'];
     $horaInicio = $_POST['horaInicio'];
@@ -16,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         // Llamar a la función realizar_reserva en PostgreSQL
         $query = "SELECT realizar_reserva(:dia, :horaInicio, :horaFinal, :correoProfesor, :laboratorioId)";
-        $stmt = $pdo->prepare($query);  // Cambiamos $conexion a $pdo
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(':dia', $dia);
         $stmt->bindParam(':horaInicio', $horaInicio);
         $stmt->bindParam(':horaFinal', $horaFinal);

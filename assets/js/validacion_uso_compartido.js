@@ -35,7 +35,6 @@ function confirmReservation() {
     }
 }
 
-
 // Función para alternar la opción de ingresar el correo del compañero
 function toggleCompanionInput() {
     const companionInput = document.getElementById('companion-input');

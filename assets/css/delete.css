@@ -1,7 +1,0 @@
-form button {
-    background-color: #e74c3c; /* Rojo para advertencia */
-}
-
-form button:hover {
-    background-color: #c0392b; /* Rojo más oscuro */
-}

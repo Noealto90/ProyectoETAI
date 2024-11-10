@@ -84,8 +84,6 @@ input[type="time"] {
     width: 50%;
 }
 
-
-
 button {
     margin-top: 60px;
     font-size: 16px;
@@ -145,13 +143,17 @@ button:hover {
     margin-top: 20px;
 }
 
-
 /* Contenedor que mostrará los espacios de trabajo */
 .workspace-grid {
     display: flex;
-    flex-wrap: wrap; /* Permite que los espacios de trabajo se ajusten en varias filas */
+    justify-content: space-between; /* Espacios a los lados */
+    width: 100%;
+}
+
+.workspace-column {
+    display: flex;
+    flex-direction: column;
     gap: 10px; /* Añade espacio entre los elementos */
-    justify-content: center; /* Centra los espacios en el contenedor */
 }
 
 .workspace {
@@ -177,12 +179,10 @@ button:hover {
     background-color: #002D6D;
 }
 
-
 .occupied {
     background-color: red;
     pointer-events: none; /* Deshabilita la interacción con el escritorio ocupado */
 }
-
 
 /* Lab Selector */
 .lab-selector {
@@ -220,8 +220,6 @@ button:hover {
 .lab-selector select option:disabled {
     color: #ccc; /* Color gris para la opción no seleccionable */
 }
-
-
 
 /* Step 3: Confirmación */
 .confirm-section {
@@ -311,7 +309,6 @@ button:hover {
     background-color: #4CAF50;
 }
 
-
 .step-2-buttons {
     display: flex;
     justify-content: space-between; /* Para que los botones estén a la par */
@@ -364,7 +361,6 @@ button:hover {
     from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
 }
-
 
 /* Estilos para la sección de añadir compañero */
 .add-companion {

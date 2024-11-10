@@ -37,7 +37,7 @@ $title = "Ver Reservas - Estudiante";
 $headerTitle = "Reservas del Estudiante";
 
 include '../templates/header.php';
-include '../templates/navbar.php';
+include '../templates/navbar_estudiante.php';
 ?>
 
 <div class="container">

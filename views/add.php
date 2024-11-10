@@ -10,6 +10,12 @@ if ($pdo === null) {
     die("Error al conectarse a la base de datos");
 }
 
+// Obtener los laboratorios de la base de datos
+$query = "SELECT id, nombre FROM laboratorios";
+$stmt = $pdo->prepare($query);
+$stmt->execute();
+$laboratorios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Verifica si el formulario ha sido enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener los datos del formulario
@@ -45,7 +51,7 @@ $headerTitle = "Añadir Equipo";
 
 // Incluir el header, navbar y footer
 include '../templates/header.php';
-include '../templates/navbar.php';
+include '../templates/navbar_super_admin.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -75,8 +81,12 @@ include '../templates/navbar.php';
         </select>
         <label for="laboratorio">Laboratorio:</label>
         <select id="laboratorio" name="laboratorio" required>
-            <option value="1">Laboratorio 1</option>
-            <option value="2">Laboratorio 2</option>
+            <option value="" selected disabled>Seleccione un laboratorio</option>
+            <?php foreach ($laboratorios as $laboratorio): ?>
+                <option value="<?php echo htmlspecialchars($laboratorio['id']); ?>">
+                    <?php echo htmlspecialchars($laboratorio['nombre']); ?>
+                </option>
+            <?php endforeach; ?>
         </select>
         <button type="submit">Añadir Equipo</button>
     </form>

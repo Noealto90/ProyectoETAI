@@ -15,7 +15,7 @@ $title = "Super Administrador - Panel Principal";
 $headerTitle = "Panel del Super Administrador";
 
 include '../templates/header.php';
-include '../templates/navbar.php';
+include '../templates/navbar_super_admin.php';
 ?>
 
 <div class="container">
@@ -25,7 +25,7 @@ include '../templates/navbar.php';
             <i class="fas fa-chart-line fa-3x"></i>
             <h2>Generar Informes</h2>
         </div>
-        <div class="cardSuperAdmin" onclick="location.href='../index.php'">
+        <div class="cardSuperAdmin" onclick="location.href='gestion_laboratorios.php'">
             <i class="fas fa-cogs fa-3x"></i>
             <h2>Gestión de Laboratorios</h2>
         </div>
@@ -33,7 +33,7 @@ include '../templates/navbar.php';
             <i class="fas fa-calendar-check fa-3x"></i>
             <h2>Realizar Reservas</h2>
         </div>
-        <div class="cardSuperAdmin" onclick="location.href='#'">
+        <div class="cardSuperAdmin" onclick="location.href='reporte.php'">
             <i class="fas fa-tools fa-3x"></i>
             <h2>Reportes de Daños</h2>
         </div>

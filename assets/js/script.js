@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
         minDate: today,
         inline: true,
         onChange: function(selectedDates, dateStr) {
-            alert("Fecha seleccionada: " + dateStr); // Verificar si la fecha se selecciona correctamente
             selectedDate = dateStr; // Guardar la fecha seleccionada
             document.getElementById('confirm-date').innerText = dateStr;
         }
@@ -36,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if ((hour === 7 && minutes >= 0) || (hour === 21 && minutes <= 30) || (hour > 7 && hour < 21)) {
             confirmTime.innerText = selectedTime;
         } else {
-            alert('Por favor selecciona una hora entre las 7:00 PM y 9:30 PM.');
+            alert('Por favor selecciona una hora entre las 7:00 AM y 9:30 PM.');
             timeInput.value = ''; // Resetear el valor si no está en el rango
         }
     });
@@ -93,6 +92,7 @@ function obtenerEscritoriosOcupados() {
 let selectedLab = 0; // Por defecto, Laboratorio 1
 
 function selectLab(labNumber) {
+    selectedLab = labNumber; // Guardar el laboratorio seleccionado
     // Al seleccionar un laboratorio, hacer una solicitud para obtener los espacios disponibles
     fetch('../../views/reservas_estudiante.php', {
         method: 'POST',
@@ -104,7 +104,6 @@ function selectLab(labNumber) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Espacios obtenidos: ' + JSON.stringify(data.espacios)); // Verificar si se obtienen los espacios correctamente
             // Llamar a la función que genera los escritorios con los espacios obtenidos
             generateWorkspaces(data.espacios);
         } else {
@@ -119,22 +118,23 @@ function generateWorkspaces(espacios) {
     workspaceGrid.innerHTML = ''; // Limpiar los espacios anteriores
 
     // Crear los escritorios en función de los datos recibidos
-    espacios.forEach(espacio => {
+    for (let i = 1; i <= 20; i++) {
         const workspace = document.createElement('div');
         workspace.classList.add('workspace');
-        workspace.textContent = `Espacio ${espacio.espacio_id}`;
+        workspace.textContent = `Escritorio ${i}`;
         
         // Comprobar si el espacio está ocupado
-        if (!espacio.activa) {
+        const espacio = espacios.find(e => e.espacio_id === i);
+        if (espacio && !espacio.activa) {
             workspace.classList.add('occupied');  // Marcar como ocupado si no está activo
         } else {
             workspace.onclick = function() {
-                selectDesk(espacio.espacio_id);
+                selectDesk(i);
             };
         }
 
         workspaceGrid.appendChild(workspace); // Añadir el espacio al contenedor
-    });
+    }
 }
 
 function selectDesk(deskNumber) {
@@ -148,7 +148,7 @@ function selectDesk(deskNumber) {
     selected.classList.add('selected');
 
     // Actualizar el panel de confirmación
-    document.getElementById('confirm-desk').innerText = `Espacio ${deskNumber}`;
+    document.getElementById('confirm-desk').innerText = `Escritorio ${deskNumber}`;
 }
 
 // Función para pasar a la siguiente fase y actualizar la sección de confirmación
@@ -248,7 +248,6 @@ document.querySelector('.confirm-btn').addEventListener('click', function() {
     .then(data => {
         if (data.success) {
             alert('Reserva confirmada');
-            console.log(reservaData);  // Verifica que los datos están correctos
             obtenerEscritoriosOcupados();  // Para actualizar los espacios ocupados
         } else {
             alert('Error: ' + data.message);

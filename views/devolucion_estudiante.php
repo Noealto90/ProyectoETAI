@@ -3,13 +3,19 @@ session_start();
 $title = "Devolución de Equipos";
 $headerTitle = "Devolución de Equipos";
 include '../templates/header.php';
-include '../templates/navbar.php';
+include '../templates/navbar_super_admin.php';
 
 // Conexión a la base de datos
 require '../includes/conexion.php'; // Asegúrate de que el archivo existe y la variable $pdo esté correctamente definida
 
 $con = new Conexion();
 $pdo = $con->getConexion();
+
+// Obtener los laboratorios de la base de datos
+$query = "SELECT id, nombre FROM laboratorios";
+$stmt = $pdo->prepare($query);
+$stmt->execute();
+$laboratorios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Manejar solicitudes GET para obtener espacios ocupados
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['laboratorio'])) {
@@ -63,9 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="laboratorio">Seleccionar laboratorio:</label>
         <select id="laboratorio" name="laboratorio">
             <option value="" selected disabled>Seleccione un laboratorio...</option>
-            <option value="1">Laboratorio 1</option>
-            <option value="2">Laboratorio 2</option>
-            <!-- Agregar más laboratorios según sea necesario -->
+            <?php foreach ($laboratorios as $laboratorio): ?>
+                <option value="<?php echo htmlspecialchars($laboratorio['id']); ?>">
+                    <?php echo htmlspecialchars($laboratorio['nombre']); ?>
+                </option>
+            <?php endforeach; ?>
         </select>
 
         <label for="espacio">Seleccionar espacio ocupado:</label>
@@ -134,23 +142,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     });
 
-    // Eliminar la opción vacía del select después de un tiempo
-    window.onload = function () {
-        const selectElement = document.getElementById("laboratorio");
-
-        // Escuchar la interacción del usuario
-        selectElement.addEventListener("change", function () {
-            eliminarOpcionVacia();
-        });
-
-        // También puedes eliminar la opción vacía tras un tiempo (opcional)
-        setTimeout(eliminarOpcionVacia, 3000); // Por ejemplo, 3 segundos
-
-        function eliminarOpcionVacia() {
-            const firstOption = selectElement.querySelector("option[value='']");
-            if (firstOption) {
-                firstOption.remove(); // Elimina la opción vacía si existe
-            }
-        }
-    };
 </script>
