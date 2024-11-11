@@ -275,6 +275,7 @@ footer {
     width: 100%;
     max-width: 1200px;
     justify-items: center; 
+    margin-bottom: 50px;
 }
 
 .card:hover {

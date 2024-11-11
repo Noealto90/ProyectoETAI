@@ -1,36 +1,34 @@
 <?php
-// Incluir el archivo de conexión a la base de datos
+session_start();
 require '../includes/conexion.php';
-
-// Crear la instancia de conexión y obtener el PDO
 $con = new Conexion();
 $pdo = $con->getConexion();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener los datos del formulario
     $dia = $_POST['dia'];
+    $correoProfesor = $_POST['correoProfesor'];
     $horaInicio = $_POST['horaInicio'];
     $horaFinal = $_POST['horaFinal'];
-    $correoProfesor = $_POST['correoProfesor'];
     $laboratorioId = $_POST['laboratorio'];
 
+    // Obtener el nombre del profesor desde la sesión
+    $nombreEncargado = $_SESSION['nombre'];
+
     try {
-        // Llamar a la función realizar_reserva en PostgreSQL
-        $query = "SELECT realizar_reserva(:dia, :horaInicio, :horaFinal, :correoProfesor, :laboratorioId)";
+        $query = "INSERT INTO reservas (diaR, nombreEncargado, horaInicio, laboratorio_id) VALUES (:dia, :nombreEncargado, :horaInicio, :laboratorioId)";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':dia', $dia);
-        $stmt->bindParam(':horaInicio', $horaInicio);
-        $stmt->bindParam(':horaFinal', $horaFinal);
-        $stmt->bindParam(':correoProfesor', $correoProfesor);
-        $stmt->bindParam(':laboratorioId', $laboratorioId);
-        
-        $stmt->execute();
-        
-        // Mensaje de confirmación
-        echo "<p>Reserva realizada exitosamente.</p>";
+        $stmt->execute([
+            ':dia' => $dia,
+            ':nombreEncargado' => $nombreEncargado,
+            ':horaInicio' => $horaInicio,
+            ':laboratorioId' => $laboratorioId
+        ]);
+
+        // Redirigir a reserva_clase.php con un mensaje de éxito
+        header('Location: reserva_clase.php?mensaje=creado');
+        exit();
     } catch (PDOException $e) {
-        // Manejar errores al realizar la reserva
-        echo "<p>Error al realizar la reserva: " . $e->getMessage() . "</p>";
+        echo "<p>Error al crear la reserva: " . $e->getMessage() . "</p>";
     }
 }
 ?>

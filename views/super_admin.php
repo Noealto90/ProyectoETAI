@@ -20,7 +20,7 @@ include '../templates/navbar_super_admin.php';
 
 <div class="container">
     <h2>Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?></h2>
-    <div class="card-grid1">
+    <div class="card-grid">
         <div class="cardSuperAdmin" onclick="location.href='#'">
             <i class="fas fa-chart-line fa-3x"></i>
             <h2>Generar Informes</h2>
@@ -38,7 +38,7 @@ include '../templates/navbar_super_admin.php';
             <h2>Reportes de Daños</h2>
         </div>
     </div>
-    <div class="card-grid2">
+    <div class="card-grid">
         <div class="cardSuperAdmin" onclick="location.href='ver_reservas_super_admin.php'">
             <i class="fas fa-calendar-alt fa-3x"></i>
             <h2>Administrar Reservas</h2>

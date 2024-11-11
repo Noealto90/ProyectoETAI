@@ -1,9 +1,9 @@
 <?php
 session_start();
-$title = "Reservar Actividad o Clase";
-$headerTitle = "Reservar Actividad o Clase";
+$title = "Reservar Actividad";
+$headerTitle = "Reservar Actividad";
 include '../templates/header.php';
-include '../templates/navbar_profesor.php';
+include '../templates/navbar_administrador.php';
 
 // Conexión a la base de datos
 require '../includes/conexion.php';
@@ -23,8 +23,8 @@ $laboratorios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <label for="dia">Fecha</label>
         <input type="date" id="dia" name="dia" required>
 
-        <label for="correoProfesor">Correo del profesor</label>
-        <input type="email" id="correoProfesor" name="correoProfesor" placeholder="profesor@institucion.com" required>
+        <label for="correoProfesor">Correo del Administrador</label>
+        <input type="email" id="correoProfesor" name="correoProfesor" placeholder="administrador@institucion.com" required>
 
         <label for="horaInicio">Hora de inicio</label>
         <input type="time" id="horaInicio" name="horaInicio" required>

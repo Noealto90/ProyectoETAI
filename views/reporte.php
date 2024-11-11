@@ -15,6 +15,8 @@ if ($_SESSION['rol'] == 'superAdmin') {
     include '../templates/navbar_super_admin.php';
 } elseif ($_SESSION['rol'] == 'estudiante') {
     include '../templates/navbar_estudiante.php';
+} elseif ($_SESSION['rol'] == 'profesor') {
+    include '../templates/navbar_profesor.php';
 } else {
     header('Location: login.php');
     exit();

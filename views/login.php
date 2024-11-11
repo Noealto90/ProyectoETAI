@@ -33,8 +33,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     header('Location: index_estudiante.php');
                 } elseif ($usuario['rol'] == 'superAdmin') {
                     header('Location: super_admin.php'); // Cambia a PHP para usar la sesión
+                } elseif ($usuario['rol'] == 'administrador') {
+                    header('Location: index_administrador.php'); // Cambia a PHP para usar la sesión
                 } elseif ($usuario['rol'] == 'profesor') {
-                    header('Location: profesor.php'); // Cambia a PHP para usar la sesión
+                    header('Location: index_profesor.php'); // Cambia a PHP para usar la sesión
                 } else {
                     $error = "Rol no válido.";
                 }
