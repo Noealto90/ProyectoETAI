@@ -17,12 +17,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo = $con->getConexion();
         // Hashea la contraseña
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+        // Verificar si el correo tiene un rol asignado
+        $sql = "SELECT rol FROM roles_asignados WHERE correo_institucional = :correo";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':correo', $correo);
+        $stmt->execute();
+        $rol_asignado = $stmt->fetchColumn();
+
+        // Si no hay un rol asignado, usar 'estudiante' por defecto
+        $rol = $rol_asignado ? $rol_asignado : 'estudiante';
+
         // Llama a la función almacenada agregar_persona para insertar el usuario
-        $sql = "SELECT agregar_persona(:nombre, :correo, :password)";
+        $sql = "SELECT agregar_persona(:nombre, :correo, :password, :rol)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':correo', $correo);
         $stmt->bindParam(':password', $hashed_password);
+        $stmt->bindParam(':rol', $rol);
         if ($stmt->execute()) {
             $resultado = $stmt->fetchColumn();
             if ($resultado == 'Usuario agregado correctamente.') {
@@ -36,7 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-
 ?>
 <link rel="stylesheet" href="../assets/css/register.css">
 <div class="register-main-container">

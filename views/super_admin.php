@@ -25,25 +25,30 @@ include '../templates/navbar_super_admin.php';
             <i class="fas fa-chart-line fa-3x"></i>
             <h2>Generar Informes</h2>
         </div>
-        <div class="cardSuperAdmin" onclick="location.href='gestion_laboratorios.php'">
+        <div class="cardSuperAdmin" onclick="location.href='gestion_equipos.php'">
             <i class="fas fa-cogs fa-3x"></i>
-            <h2>Gestión de Laboratorios</h2>
+            <h2>Gestión de Equipos</h2>
         </div>
         <div class="cardSuperAdmin" onclick="location.href='reservas_super_admin.php'">
             <i class="fas fa-calendar-check fa-3x"></i>
             <h2>Realizar Reservas</h2>
         </div>
-        <div class="cardSuperAdmin" onclick="location.href='reporte.php'">
-            <i class="fas fa-tools fa-3x"></i>
-            <h2>Reportes de Daños</h2>
-        </div>
     </div>
     <div class="card-grid">
-        <div class="cardSuperAdmin" onclick="location.href='ver_reservas_super_admin.php'">
-            <i class="fas fa-calendar-alt fa-3x"></i>
-            <h2>Administrar Reservas</h2>
-        </div>
+    <div class="cardSuperAdmin" onclick="location.href='reporte.php'">
+        <i class="fas fa-tools fa-3x"></i>
+        <h2>Reportes de Daños</h2>
     </div>
+
+    <div class="cardSuperAdmin" onclick="location.href='ver_reservas_super_admin.php'">
+        <i class="fas fa-calendar-alt fa-3x"></i>
+        <h2>Administrar Reservas</h2>
+    </div>
+    <div class="cardSuperAdmin" onclick="location.href='asignar_roles.php'">
+        <i class="fas fa-user-cog fa-3x"></i>
+        <h2>Asignar Roles</h2>
+    </div>
+</div>
 </div>
 
 <?php include '../templates/footer.php'; ?>
