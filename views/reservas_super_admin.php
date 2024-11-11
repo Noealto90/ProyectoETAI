@@ -2,7 +2,7 @@
 $title = "Reservas";
 $headerTitle = "Reservas";
 include '../templates/header.php';
-include '../templates/navbar.php';
+include '../templates/navbar_super_admin.php';
 ?>
 
 <div class="reservation-container">
@@ -10,7 +10,7 @@ include '../templates/navbar.php';
     <div class="reservation-options">
         <button onclick="window.location.href='cuatrimestre.php'">Reserva por Cuatrimestre</button>
         <button onclick="window.location.href='reserva_clase.php'">Reserva para Actividad o Clase</button>
-        <button onclick="window.location.href='reservas_estudiante.php'">Reserva de Espacio</button>
+        <button onclick="window.location.href='reservasEstu.php'">Reserva de Espacio</button>
     </div>
 </div>
 

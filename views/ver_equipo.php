@@ -39,7 +39,7 @@ $title = "Ver Equipos";
 $headerTitle = "Equipos Disponibles";
 
 include '../templates/header.php';
-include '../templates/navbar.php';
+include '../templates/navbar_super_admin.php';
 ?>
 
 <div class="container">

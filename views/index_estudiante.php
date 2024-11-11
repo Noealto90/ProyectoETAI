@@ -15,7 +15,7 @@ $title = "Inicio Estudiante";
 $headerTitle = "Inicio Estudiante";
 
 include '../templates/header.php';
-include '../templates/navbar.php';
+include '../templates/navbar_estudiante.php';
 ?>
 
 <div class="container">
@@ -23,11 +23,11 @@ include '../templates/navbar.php';
         <h2>Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?></h2>
     </div>
     <div class="card-grid">
-        <div class="card" onclick="location.href='reservas_estudiante.php'">
+        <div class="card" onclick="location.href='reservasEstu.php'">
             <i class="fas fa-calendar-check fa-3x"></i>
             <h2>Reservar un Espacio</h2>
         </div>
-        <div class="card" onclick="location.href='Reporte.php'">
+        <div class="card" onclick="location.href='reporte.php'">
             <i class="fas fa-tools fa-3x"></i>
             <h2>Reporte de Daños</h2>
         </div>
@@ -35,7 +35,7 @@ include '../templates/navbar.php';
             <i class="fas fa-calendar-alt fa-3x"></i>
             <h2>Ver Reservas Activas</h2>
         </div>
-        <div class="card" onclick="location.href='Renovar.php'">
+        <div class="card" onclick="location.href='renovar.php'">
             <i class="fas fa-sync-alt fa-3x"></i>
             <h2>Renovar el Espacio</h2>
         </div>

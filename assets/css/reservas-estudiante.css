@@ -89,7 +89,7 @@ input[type="time"] {
 button {
     margin-top: 60px;
     font-size: 16px;
-    padding: 10px 20px;
+    padding: 6px 12px;  /* Reducido el relleno */
     background-color: #002D6D;
     color: white;
     border: none;
@@ -276,23 +276,19 @@ button:hover {
     font-size: 20px; /* Aumenta el tamaño del valor */
 }
 
-/* Botones de acción */
-.action-buttons {
-    display: flex;
-    justify-content: space-between; /* Espacio igual entre los botones */
-    margin-top: 30px; /* Aumenta el margen superior para más separación */
-}
 
 .btn {
-    padding: 12px 25px;
+    padding: 10px 16px; /* Ajustado para un tamaño más compacto */
     font-size: 16px;
     color: white;
     background-color: #002D6D;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    flex: 1; /* Los botones ocuparán el mismo espacio disponible */
+    max-width: 150px; /* Limita el ancho máximo para evitar botones largos */
     transition: background-color 0.3s ease;
-    width: 48%; /* Asegura que los botones ocupen un ancho similar */
+    text-align: center;
 }
 
 .confirm-btn {
@@ -314,19 +310,40 @@ button:hover {
 
 .step-2-buttons {
     display: flex;
-    justify-content: space-between; /* Para que los botones estén a la par */
-    width: 100%; /* Asegura que los botones tomen todo el ancho disponible */
-    margin-top: 20px; /* Añade un poco de espacio superior si es necesario */
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
 }
+
+
 .back-button {
     background-color: #808080; /* Color gris */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+    height: 60px; /* Altura fija para todos los botones */
+    margin-top: 150px;
 }
+
+.back1-button {
+    background-color: #808080; /* Color gris */
+    height: 60px; /* Altura fija para todos los botones */
+    margin-top: 60px;
+}
+
+.continue-button {
+    background-color: #004494;
+    height: 60px; /* Altura fija para todos los botones */
+}
+
+.companion-btn {
+    background-color: #002D6D;
+    margin-top: 200px;
+    
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
 .back-button:hover, .continue-button:hover {
     opacity: 0.8; /* Efecto hover para ambos botones */
 }
@@ -368,22 +385,15 @@ button:hover {
 
 /* Estilos para la sección de añadir compañero */
 .add-companion {
-    margin-top: 20px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #add-companion-btn {
-    background-color: #002D6D;
-    color: white;
-    padding: 10px 35px;
-    border: none;
-    margin-top: 70px;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    width: 130px;
-    transition: background-color 0.3s ease;
+    max-width: 200px; /* Limita el ancho del botón "Añadir compañero" */
 }
+
 
 #add-companion-btn:hover {
     background-color: #004494;
@@ -407,4 +417,37 @@ button:hover {
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+/* Botones de acción */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    max-width: 150px; /* Establecer el mismo ancho para todos los botones */
+    gap: 20px;
+    flex-grow: 1;
+    width: 100%;
+    
+    margin-top: 30px;
+}
+
+.action-buttons .btn,
+.step-2-buttons .btn {
+    flex-basis: 45%;
+    max-width: 200px;
+}
+
+
+/* Responsive: asegúrate de que se vea bien en pantallas más pequeñas */
+@media (max-width: 768px) {
+    .step-2-buttons,
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 100%;
+        max-width: none;
+    }
 }

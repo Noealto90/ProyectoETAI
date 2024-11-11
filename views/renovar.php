@@ -3,7 +3,7 @@ session_start();
 $title = "Renovar Espacio - Sistema de Gestión de Equipos";
 $headerTitle = "Renovar Espacio";
 include '../templates/header.php';
-include '../templates/navbar.php';
+include '../templates/navbar_estudiante.php';
 ?>
 
 <div class="container">

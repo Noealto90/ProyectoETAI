@@ -3,7 +3,26 @@ session_start();
 $title = "Mi Cuenta";
 $headerTitle = "Mi Cuenta";
 include '../templates/header.php';
-include '../templates/navbar.php';
+//include '../templates/navbar_super_admin.php';
+
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['nombre']) || !isset($_SESSION['rol'])) {
+    header('Location: login.php');
+    exit();
+}
+
+
+// Incluir la barra de navegación correspondiente según el rol del usuario
+if ($_SESSION['rol'] == 'superAdmin') {
+    include '../templates/navbar_super_admin.php';
+} elseif ($_SESSION['rol'] == 'estudiante') {
+    include '../templates/navbar_estudiante.php';
+} else {
+    // Si el rol no es válido, redirigir al login
+    header('Location: login.php');
+    exit();
+}
 
 // Conexión a la base de datos
 require '../includes/conexion.php';

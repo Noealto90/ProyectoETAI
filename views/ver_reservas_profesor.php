@@ -1,18 +1,13 @@
 <?php
-// ver_reservas_estudiante.php
+session_start(); // Inicia la sesión
 
-// Verifica si la sesión ya está iniciada
-if (session_status() == PHP_SESSION_NONE) {
-    session_start(); // Inicia la sesión solo si no está activa
-}
-
-// Verifica si el usuario está autenticado y tiene el rol de 'estudiante'
-if (!isset($_SESSION['nombre']) || $_SESSION['rol'] != 'estudiante') {
+// Verifica si el usuario está autenticado y si tiene el rol de 'profesor'
+if (!isset($_SESSION['nombre']) || $_SESSION['rol'] != 'profesor') {
     header('Location: login.php'); // Redirige si no tiene acceso
     exit();
 }
 
-// Recupera el nombre del usuario y rol
+// Recupera el nombre del usuario
 $nombreUsuario = $_SESSION['nombre'];
 
 // Conexión a la base de datos
@@ -21,7 +16,7 @@ include '../includes/conexion.php';  // Asegúrate de que el archivo existe y la
 $con = new Conexion();
 $pdo = $con->getConexion();
 
-// Consulta las reservas del responsable
+// Consulta las reservas del profesor
 $sql = "SELECT id, laboratorio_id, espacio_id, nombreEncargado, nombreAcompanante, horaInicio, horaFinal, diaR, activa 
         FROM reservas 
         WHERE nombreEncargado = :nombreUsuario 
@@ -33,11 +28,11 @@ $stmt->execute();
 $reservas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Variables para el header
-$title = "Ver Reservas - Estudiante";
-$headerTitle = "Reservas del Estudiante";
+$title = "Ver Reservas - Profesor";
+$headerTitle = "Reservas del Profesor";
 
 include '../templates/header.php';
-include '../templates/navbar_estudiante.php';
+include '../templates/navbar_profesor.php';
 ?>
 
 <div class="container">

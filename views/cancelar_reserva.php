@@ -11,7 +11,7 @@ if (!isset($_SESSION['nombre']) || $_SESSION['rol'] != 'superAdmin') {
 }
 
 // Incluimos la conexión a la base de datos
-require_once 'conexion_estudiante.php'; // Asegúrate de que el archivo es correcto
+require_once '../includes/conexion.php'; // Asegúrate de que el archivo es correcto
 
 // Verificamos que se haya enviado el ID de la reserva
 if (isset($_POST['id'])) {

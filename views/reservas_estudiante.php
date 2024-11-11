@@ -1,138 +1,23 @@
 <?php
-session_start();
-$title = "Reservas de Laboratorios ETAI";
-$headerTitle = "Reservas de Laboratorios ETAI";
-include '../templates/header.php';
-include '../templates/navbar.php';
-?>
 
-<div class="container">
-    <!-- Progress Bar -->
-    <div class="progress-container">
-        <div class="progress-bar">
-            <div class="step completed">
-                <span class="circle">1</span>
-                <p>Seleccionar Fecha</p>
-            </div>
-            <div class="step">
-                <span class="circle">2</span>
-                <p>Seleccionar Espacio</p>
-            </div>
-            <div class="step">
-                <span class="circle">3</span>
-                <p>Confirmar</p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Step 1: Select Date -->
-    <section class="step-content" id="step1">
-        <!-- Calendario a la izquierda -->
-        <div class="calendar-container">
-            <div id="reservation-calendar"></div>
-        </div>
-        
-        <!-- Selector de hora a la derecha -->
-        <div class="time-container">
-            <label for="reservation-time">Seleccionar hora:</label>
-            <input type="time" id="reservation-time" name="reservation-time" required>
-        </div>
-
-        <button type="button" onclick="nextStep(2)">Continuar</button>
-    </section>
-
-    <!-- Step 2: Select Lab and Desk -->
-    <section class="step-content1" id="step2" style="display:none;">
-        <h2>Selecciona tu Laboratorio</h2>
-        <div class="lab-selector">
-            <select id="lab-select" onchange="selectLab(this.value)">
-                <option value="" disabled selected>Selecciona un laboratorio</option>
-                <option value="1">Laboratorio #1</option>
-                <option value="2">Laboratorio #2</option>
-            </select>
-        </div>
-
-        <div class="workspace-container">
-            <h2>Selecciona tu Espacio de Trabajo</h2>
-            <div class="workspace-grid" id="workspace-grid">
-                <!-- Los espacios se generarán dinámicamente mediante JavaScript -->
-            </div>
-        </div>
-
-        <div class="step-2-buttons">
-            <button class="back-button" onclick="previousStep(1)">Atrás</button>
-            <button class="button" onclick="nextStep(3)">Continuar</button>
-        </div>
-    </section>
-
-    <!-- Step 3: Confirm -->
-    <section class="step-content confirm-section" id="step3" style="display:none;">
-        <h2>Confirmar Reserva</h2>
-        <p class="instruction">Por favor confirma los detalles de tu reserva:</p>
-
-        <div class="reservation-details">
-            <!-- Nuevo detalle para el laboratorio -->
-            <div class="detail-item">
-                <span class="detail-label">Laboratorio:</span>
-                <span class="detail-value" id="confirm-lab">No seleccionado</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Fecha:</span>
-                <span class="detail-value" id="confirm-date">No seleccionada</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Hora:</span>
-                <span class="detail-value" id="confirm-time">No seleccionada</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Espacio:</span>
-                <span class="detail-value" id="confirm-desk">No seleccionado</span>
-            </div>
-        </div>
-
-        <!-- Botón para añadir compañero -->
-        <div class="add-companion">
-            <button id="add-companion-btn" class="btn companion-btn">Añadir compañero</button>
-            <div id="companion-input" style="display:none;">
-                <label for="companion-email">Correo del compañero:</label>
-                <input type="email" id="companion-email" name="companion-email" placeholder="Ingresa el correo del compañero">
-            </div>
-        </div>
-
-        <!-- Botones de acción -->
-        <div class="action-buttons">
-            <button class="btn confirm-btn" type="submit">Confirmar Reserva</button>
-            <button class="back-button" onclick="previousStep(2)">Atrás</button>
-        </div>
-    </section>
-</div>
-
-<div id="toast"></div>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<link rel="stylesheet" href="../assets/css/reservas-estudiante.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="../assets/js/script.js"></script>
-<script src="../assets/js/validacion_uso_compartido.js"></script>
-
-<?php include '../templates/footer.php'; ?>
-
-<?php
-require '../includes/conexion.php'; // Incluir el archivo de conexión a la base de datos
-
-$con = new Conexion();
-$pdo = $con->getConexion();
-
+session_start(); // Inicia la sesión
+// Incluir el archivo de conexión a la base de datos
+require '../includes/conexion_estudiante.php';
+// Verificamos si es una solicitud de tipo POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Leemos los datos enviados desde el cliente (JavaScript)
     $input = json_decode(file_get_contents('php://input'), true);
 
+    // Verificamos si los datos se recibieron correctamente
     if (is_null($input)) {
         die(json_encode(['success' => false, 'message' => 'No se recibieron datos']));
     }
 
     try {
+        // Ejecutar primero activar_espacios()
         $pdo->query("SELECT activar_espacios();");
 
+        // Ejecutar desactivar_espacios_por_reservas con la fecha y hora recibidas
         $fecha = $input['date'] ?? '2024-10-15';
         $hora = $input['time'] ?? '12:00:00';
         $stmtDesactivar = $pdo->prepare("SELECT desactivar_espacios_por_reservas(:fecha, :hora);");
@@ -154,11 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $espacio_id = (int) $input['desk'];     
         $fecha = $input['date'];                
         $horaInicio = $input['time'];           
-        $nombreEncargado = $input['encargado']; 
+        $nombreEncargado = $_SESSION['nombre']; 
         $nombreAcompanante = $input['companion'] ?? null;  
         $activa = $input['activa'];
     
         try {
+            // Verificar si ya existe una reserva con los mismos parámetros
             $queryCheck = "SELECT COUNT(*) FROM reservas 
                            WHERE laboratorio_id = :laboratorio_id 
                            AND espacio_id = :espacio_id 
@@ -180,8 +66,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
     
-            $query = "INSERT INTO reservas (laboratorio_id, espacio_id, nombreEncargado, nombreAcompanante, horaInicio, diaR, activa) 
-                      VALUES (:laboratorio_id, :espacio_id, :nombreEncargado, :nombreAcompanante, :horaInicio, :fecha, :activa)";
+            // Calcular la horaFinal (horaInicio + 3 horas)
+            $horaInicioDateTime = new DateTime($horaInicio);
+            $horaFinalDateTime = clone $horaInicioDateTime;
+            $horaFinalDateTime->add(new DateInterval('PT3H')); // Sumar 3 horas
+            $horaFinal = $horaFinalDateTime->format('H:i:s'); // Obtener la hora final en formato HH:MM:SS
+    
+            // Insertamos los datos en la tabla reservas
+            $query = "INSERT INTO reservas (laboratorio_id, espacio_id, nombreEncargado, nombreAcompanante, horaInicio, horaFinal, diaR, activa) 
+                      VALUES (:laboratorio_id, :espacio_id, :nombreEncargado, :nombreAcompanante, :horaInicio, :horaFinal, :fecha, :activa)";
     
             $stmt = $pdo->prepare($query);
             $stmt->execute([
@@ -190,10 +83,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':nombreEncargado' => $nombreEncargado,
                 ':nombreAcompanante' => $nombreAcompanante,
                 ':horaInicio' => $horaInicio,
+                ':horaFinal' => $horaFinal,  // Insertamos la hora final calculada
                 ':fecha' => $fecha,
                 ':activa' => $activa
             ]);
 
+            // Actualizar el estado del espacio a inactivo
             $queryUpdate = "UPDATE espacios SET activa = FALSE 
                             WHERE laboratorio_id = :laboratorio_id 
                             AND espacio_id = :espacio_id";
@@ -203,8 +98,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':espacio_id' => $espacio_id
             ]);
 
+            // Confirmación de la inserción y actualización
             echo json_encode(['success' => true, 'message' => 'Reserva confirmada y espacio actualizado']);
         } catch (PDOException $e) {
+            // Registro del error en el log de PHP
             error_log('Error de PDO: ' . $e->getMessage());
             echo json_encode(['success' => false, 'message' => 'Error al realizar la reserva: ' . $e->getMessage()]);
         }

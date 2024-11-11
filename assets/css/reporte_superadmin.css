@@ -1,0 +1,48 @@
+/* Estilo del contenedor para el calendario y el botón en línea */
+.form-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+}
+
+/* Ajuste de margen superior para el botón */
+.btn-confirm {
+    margin-top: -4px;
+    width: 150px; /* Ajusta el ancho aquí según prefieras */
+}
+
+/* Botón alargado (si usas una clase adicional para el ancho) */
+.btn-alargado {
+    width: 150px; /* Ajusta el valor según el tamaño deseado */
+}
+
+/* Estilo para el selector de laboratorio */
+.styled-select {
+    appearance: none; /* Eliminar el estilo predeterminado */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #f9f9f9; /* Fondo similar al campo de fecha */
+    border: 1px solid #ccc; /* Borde similar al campo de fecha */
+    padding: 16px 12px;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+    width: auto; /* Ajusta el ancho automáticamente */
+}
+
+/* Agregar un icono de flecha para el selector */
+.styled-select::after {
+    content: "▼";
+    font-size: 12px;
+    position: absolute;
+    right: 10px;
+    color: #555;
+    pointer-events: none;
+}
+
+/* Asegurarse de que el contenedor del select esté en una posición relativa */
+.form-group {
+    position: relative;
+}

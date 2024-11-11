@@ -1,7 +1,7 @@
 <?php
 
 $host = 'localhost';  // Ajusta los valores de tu servidor PostgreSQL
-$dbname = 'administracion';
+$dbname = 'administracion2';
 $user = 'postgres';
 $password = 'Admin';
 

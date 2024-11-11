@@ -3,26 +3,16 @@ let selectedDesk = null;
 let escritoriosOcupados = []; // Inicializar como un array vacío
 
 document.addEventListener('DOMContentLoaded', function() {
-
     const calendarContainer = document.getElementById('reservation-calendar');
     const timeInput = document.getElementById('reservation-time');
     const confirmTime = document.getElementById('confirm-time');
     const today = new Date().toISOString().split('T')[0];
-
-    // Verificar si los elementos existen
-    if (!calendarContainer) {
-        alert("No se encontró el contenedor del calendario");
-    }
-    if (!timeInput) {
-        alert("No se encontró el input de hora");
-    }
 
     // Configuramos Flatpickr para mostrar el calendario siempre visible
     flatpickr(calendarContainer, {
         minDate: today,
         inline: true,
         onChange: function(selectedDates, dateStr) {
-            alert("Fecha seleccionada: " + dateStr); // Verificar si la fecha se selecciona correctamente
             selectedDate = dateStr; // Guardar la fecha seleccionada
             document.getElementById('confirm-date').innerText = dateStr;
         }
@@ -42,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+
 function enviarReservaYObtenerEscritorios() {
     const selectedLab = document.getElementById('lab-select').value;
     const selectedDate = document.getElementById('confirm-date').innerText;
@@ -60,7 +51,7 @@ function enviarReservaYObtenerEscritorios() {
         desk: selectedDesk
     };
 
-    fetch('../../views/reservas_estudiante.php', {
+    fetch('reservas_estudiante.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -70,7 +61,7 @@ function enviarReservaYObtenerEscritorios() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Reserva confirmada: ' + data.message); // Verificar si la reserva se confirma correctamente
+            console.log('Reserva confirmada:', data.message);
             obtenerEscritoriosOcupados();
         } else {
             alert(data.message);
@@ -79,9 +70,10 @@ function enviarReservaYObtenerEscritorios() {
     .catch(error => console.error('Error:', error));
 }
 
+
 // Función para obtener los escritorios ocupados después de confirmar la reserva
 function obtenerEscritoriosOcupados() {
-    fetch('../../views/reservas_estudiante.php')
+    fetch('reservas_estudiante.php')
         .then(response => response.json())
         .then(data => {
             escritoriosOcupados = data;
@@ -94,7 +86,7 @@ let selectedLab = 0; // Por defecto, Laboratorio 1
 
 function selectLab(labNumber) {
     // Al seleccionar un laboratorio, hacer una solicitud para obtener los espacios disponibles
-    fetch('../../views/reservas_estudiante.php', {
+    fetch('reservas_estudiante.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -104,7 +96,6 @@ function selectLab(labNumber) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Espacios obtenidos: ' + JSON.stringify(data.espacios)); // Verificar si se obtienen los espacios correctamente
             // Llamar a la función que genera los escritorios con los espacios obtenidos
             generateWorkspaces(data.espacios);
         } else {
@@ -113,6 +104,7 @@ function selectLab(labNumber) {
     })
     .catch(error => console.error('Error al hacer la solicitud:', error));
 }
+
 
 function generateWorkspaces(espacios) {
     const workspaceGrid = document.getElementById('workspace-grid');
@@ -137,6 +129,7 @@ function generateWorkspaces(espacios) {
     });
 }
 
+
 function selectDesk(deskNumber) {
     // Remover la clase 'selected' de todos los escritorios
     document.querySelectorAll('.workspace').forEach((desk) => {
@@ -150,6 +143,7 @@ function selectDesk(deskNumber) {
     // Actualizar el panel de confirmación
     document.getElementById('confirm-desk').innerText = `Espacio ${deskNumber}`;
 }
+
 
 // Función para pasar a la siguiente fase y actualizar la sección de confirmación
 function nextStep(step) {
@@ -180,6 +174,7 @@ function nextStep(step) {
     }
 }
 
+
 // Función para retroceder al paso anterior
 function previousStep(step) {
     nextStep(step); // Mostrar el paso anterior
@@ -206,6 +201,8 @@ function previousStep(step) {
         }
     }
 }
+
+
 
 document.querySelector('.confirm-btn').addEventListener('click', function() {
     // Recopilar los datos seleccionados
@@ -237,7 +234,7 @@ document.querySelector('.confirm-btn').addEventListener('click', function() {
     };
 
     // Enviar los datos al servidor
-    fetch('../../views/reservas_estudiante.php', {
+    fetch('reservas_estudiante.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -255,4 +252,6 @@ document.querySelector('.confirm-btn').addEventListener('click', function() {
         }
     })
     .catch(error => console.error('Error:', error));
+    
+
 });

@@ -19,7 +19,7 @@ switch ($_SESSION['rol']) {
         header('Location: views/index_profesor.php'); // Asegúrate de que esta página exista
         break;
     case 'administrativo':
-        header('Location: views/index_administrativo.php'); // Asegúrate de que esta página exista
+        header('Location: views/index_administrador.php'); // Asegúrate de que esta página exista
         break;
     default:
         header('Location: views/login.php'); // Redirige si el rol no es válido

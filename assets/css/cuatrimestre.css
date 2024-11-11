@@ -1,66 +1,108 @@
-.container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Alinea hacia arriba */
-  padding-top: 30px; /* Separa el formulario del borde superior */
-  padding-bottom: 20px;
-}
-
-.form-card {
-  background-color: #66cc33; /* Verde del logo */
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  width: 320px;
-  transition: box-shadow 0.3s ease, background-color 0.3s ease;
-}
-
-.form-card:hover {
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-  background-color: #5ba828; /* Verde más oscuro */
-}
-
-.form-card h2 {
-  text-align: center;
-  margin-bottom: 15px;
-  color: #003366;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-}
-
-.form-group input, 
-.form-group select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
+/* Estilo para los botones de confirmación y cancelación */
+.cancel-btn {
+  background-color: #ff4d4d; /* Rojo para cancelación */
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  cursor: pointer;
+  font-size: 16px;
   border-radius: 5px;
-  box-sizing: border-box;
-  margin-top: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.btn-confirm {
+.cancel-btn:hover {
+  background-color: #ff1a1a;
+  transform: scale(1.05);
+}
+
+/* Estilo para el formulario */
+.form-card {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 1000px;
+  margin: -40px auto; /* Levanta el formulario más cerca de la parte superior */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Cambiar a 3 columnas */
+  grid-gap: 30px;
+  justify-items: center;
+}
+
+h2 {
+  font-size: 2.2em;
+  color: #003366;
+  text-align: center;
+  grid-column: span 3; /* La cabecera ocupa toda la fila */
+  margin-bottom: 30px;
+}
+
+/* Estilo de los grupos de formulario */
+.form-group {
+  margin-bottom: -10px;
+}
+
+label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: -8px;
+}
+
+select, input[type="date"], input[type="time"] {
   width: 100%;
   padding: 12px;
-  background-color: #ffcc00; /* Amarillo */
-  color: #003366; /* Azul oscuro */
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  margin-top: 8px;
+  transition: border-color 0.3s ease;
+}
+
+select:focus, input[type="date"]:focus, input[type="time"]:focus {
+  border-color: #1E90FF;
+}
+
+/* Estilo de los botones */
+.btn-confirm {
+  background-color: #003366;
+  color: white;
+  padding: 14px 30px;
   border: none;
-  border-radius: 8px;
-  font-weight: bold;
+  font-size: 18px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  grid-column: span 3; /* El botón ocupa toda la fila */
+  margin-top: 30px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-confirm:hover {
-  background-color: #003366; /* Azul oscuro */
-  color: #ffffff;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  background-color: #1E90FF;
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .form-card {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en pantallas medianas */
+  }
+}
+
+@media (max-width: 768px) {
+  .form-card {
+    grid-template-columns: 1fr; /* 1 columna en pantallas pequeñas */
+    max-width: 100%;
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 1.8em;
+  }
+
+  .btn-confirm {
+    grid-column: span 1;
+  }
 }
