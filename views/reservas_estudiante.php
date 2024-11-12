@@ -3,6 +3,15 @@
 session_start(); // Inicia la sesión
 // Incluir el archivo de conexión a la base de datos
 require '../includes/conexion_estudiante.php';
+
+require 'C:\Users\HP\Desktop\ProyectoDeAdminETAI\ReservasETAI\assets\PHPMailer\Exception.php';
+require 'C:\Users\HP\Desktop\ProyectoDeAdminETAI\ReservasETAI\assets\PHPMailer\PHPMailer.php';
+require 'C:\Users\HP\Desktop\ProyectoDeAdminETAI\ReservasETAI\assets\PHPMailer\SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+
 // Verificamos si es una solicitud de tipo POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Leemos los datos enviados desde el cliente (JavaScript)
@@ -100,6 +109,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Confirmación de la inserción y actualización
             echo json_encode(['success' => true, 'message' => 'Reserva confirmada y espacio actualizado']);
+
+            // Obtener el correo del encargado
+            $queryCorreoEncargado = "SELECT correo_institucional FROM usuarios WHERE nombre = :nombreEncargado";
+            $stmtCorreoEncargado = $pdo->prepare($queryCorreoEncargado);
+            $stmtCorreoEncargado->execute([':nombreEncargado' => $nombreEncargado]);
+            $correoEncargado = $stmtCorreoEncargado->fetchColumn();
+
+
+            // Enviar correo de confirmación
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'noealto03@gmail.com';
+            $mail->Password = 'swro tdsr scpk fqwk';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+            $mail->setFrom('noealto03@gmail.com', 'Sistema de Reservas');
+
+            if ($correoEncargado) {
+                $mail->addAddress($correoEncargado);
+            }
+
+            if ($nombreAcompanante) {
+                $mail->addAddress($nombreAcompanante);
+            }
+
+            $mail->Subject = 'Confirmacion de Reserva';
+            $mail->Body = "
+                A quien corresponda: 
+
+                Se confirma su reserva de un espacio. A continuación, se le proporcionan los detalles de su reserva:
+
+                - Laboratorio: $laboratorio_id
+                - Espacio: $espacio_id
+                - Fecha: $fecha
+                - Hora de Inicio: $hora
+                - Hora de Final: $horaFinal
+                - Compañero: " . ($nombreAcompanante ? "Correo del acompañante: $nombreAcompanante" : "Ninguno") . "
+
+                Le agradecemos por utilizar nuestro sistema de reservas. Si tiene alguna consulta, no dude en contactarnos.
+
+                Saludos cordiales,
+                Sistema de Reservas
+            ";
+
+            $mail->send();
+
+
+
         } catch (PDOException $e) {
             // Registro del error en el log de PHP
             error_log('Error de PDO: ' . $e->getMessage());
