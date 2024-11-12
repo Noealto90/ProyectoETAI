@@ -117,17 +117,23 @@ function generateWorkspaces(espacios) {
     const workspaceGrid = document.getElementById('workspace-grid');
     workspaceGrid.innerHTML = ''; // Limpiar los espacios anteriores
 
+    // Verificar si el espacio con id 0 está ocupado
+    const espacioCeroOcupado = espacios.some(espacio => espacio.espacio_id === 0 && !espacio.activa);
+
     // Crear los escritorios en función de los datos recibidos
     espacios.forEach(espacio => {
+        if (espacio.espacio_id === 0) return; // Omitir la creación del espacio 0
+        
         const workspace = document.createElement('div');
         workspace.classList.add('workspace');
         workspace.setAttribute('data-id', espacio.espacio_id);  // Asignar data-id con el ID del escritorio
         workspace.textContent = `Espacio ${espacio.espacio_id}`;
         
-        // Comprobar si el espacio está ocupado
-        if (!espacio.activa) {
-            workspace.classList.add('occupied');  // Marcar como ocupado si no está activo
+        // Marcar como ocupado si espacio_id = 0 está ocupado o el espacio individual no está activo
+        if (espacioCeroOcupado || !espacio.activa) {
+            workspace.classList.add('occupied');  // Marcar como ocupado
         } else {
+            // Solo asignar evento de selección si el espacio está activo
             workspace.onclick = function() {
                 selectDesk(espacio.espacio_id);
             };
@@ -135,7 +141,13 @@ function generateWorkspaces(espacios) {
 
         workspaceGrid.appendChild(workspace); // Añadir el espacio al contenedor
     });
+
+    // Actualizar el mensaje de confirmación si todos los espacios están ocupados
+    if (espacioCeroOcupado) {
+        document.getElementById('confirm-desk').innerText = 'Todos los espacios están ocupados';
+    }
 }
+
 
 
 
