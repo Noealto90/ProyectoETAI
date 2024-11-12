@@ -125,6 +125,20 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+--BORRAR DATOS REPETIDOS
+CREATE OR REPLACE FUNCTION eliminar_duplicados_cancelados()
+RETURNS VOID AS $$
+BEGIN
+    DELETE FROM cancelados
+    WHERE id NOT IN (
+        SELECT MIN(id)
+        FROM cancelados
+        GROUP BY correo
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+
 --RESERVAS EN TIEMPO REAL
 CREATE OR REPLACE FUNCTION desactivar_espacios_por_reservas(dia DATE, inicio TIME)
 RETURNS VOID AS $$
@@ -140,8 +154,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--Prueba
+select * from cancelados
+delete from cancelados
+select * from reservas
+select * from usuarios
+SELECT reserva_cuatrimestre('2024-11-8', 2, 'Emma Lopez', '11:00:00', '15:00:00')
 
---RESERVAS POR CUATRIMESTRE
+SELECT eliminar_duplicados_cancelados();
+
+
 CREATE OR REPLACE FUNCTION reserva_cuatrimestre(
     fecha_inicio DATE,
     laboratorio_id_se INT,
@@ -158,17 +180,23 @@ DECLARE
 BEGIN
     -- Loop para insertar reservas cada lunes
     WHILE fecha_actual <= fecha_final LOOP
-        -- Verificar si ya existe una reserva para el mismo laboratorio, día y en la misma franja horaria
+        -- Verificar si ya existe una reserva activa para el mismo laboratorio, día y en la misma franja horaria
         SELECT * INTO reserva_existente
         FROM reservas
         WHERE laboratorio_id = laboratorio_id_se
           AND diaR = fecha_actual
+          AND activa = true
           AND (
               (horaInicio, horaFinal) OVERLAPS (hora_inicio, hora_final)
           );
 
         IF FOUND THEN
-            -- Si hay una reserva existente, buscar el correo del encargado de esa reserva existente
+            -- Marcar la reserva existente como inactiva
+            UPDATE reservas
+            SET activa = false
+            WHERE id = reserva_existente.id;
+
+            -- Obtener el correo del encargado de la reserva existente
             SELECT correo_institucional INTO correo_encargado_existente
             FROM usuarios
             WHERE nombre = reserva_existente.nombreEncargado;
@@ -191,15 +219,80 @@ END;
 $$ LANGUAGE plpgsql;
 
 
---FUNCIÓN PARA REALIZAR LAS RESERVAS DE ESTUDIANTE
-CREATE OR REPLACE FUNCTION realizar_reserva(
+
+
+--FUNCIÓN PARA REALIZAR LAS RESERVAS DE PROFESORES O ADMINISTRATIVOS
+
+
+select realizar_reserva('2024-11-19', '09:00:00', '12:30:00', 'Emma Lopez', 2)
+
+select * from usuarios
+select * from cancelados
+delete from cancelados
+
+select * from reservas where diar = '2024-11-19'
+delete from reservas where id = 64;
+delete from reservas where id = 155
+delete from reservas where id = 45
+
+insert into reservas (laboratorio_id, espacio_id, nombreEncargado, nombreAcompanante, horainicio, horafinal, diar)
+values (2, 1, 'Luna Torres', null, '08:30:00', '11:30:00', '2024-11-19')
+
+CREATE OR REPLACE FUNCTION realizar_reserva( 
     p_dia DATE,
     p_hora_inicio TIME,
     p_hora_final TIME,
     p_correo_profesor VARCHAR,
     p_laboratorio_id INT
-) RETURNS VOID AS $$
+) RETURNS INT AS $$
+DECLARE
+    v_nombre_encargado VARCHAR(100);
+    v_rol_usuario VARCHAR(50);
+    v_correo_encargado VARCHAR(255);
 BEGIN
+    -- Verificar si hay una reserva activa que coincide con los parámetros proporcionados
+    FOR v_nombre_encargado IN
+        SELECT nombreEncargado
+        FROM reservas
+        WHERE diaR = p_dia
+          AND horaInicio < p_hora_final
+          AND horaFinal > p_hora_inicio
+          AND laboratorio_id = p_laboratorio_id
+          AND activa = TRUE
+    LOOP
+        -- Verificar el rol del nombreEncargado en la tabla de usuarios
+        SELECT rol INTO v_rol_usuario
+        FROM usuarios
+        WHERE nombre = v_nombre_encargado;
+        
+        -- Si el encargado no es un estudiante, devolver 1 y salir
+        IF v_rol_usuario IS DISTINCT FROM 'estudiante' THEN
+            RETURN 1;
+        END IF;
+    END LOOP;
+
+    -- Insertar los correos de los encargados cuyas reservas se van a marcar como inactivas en la tabla cancelados
+    FOR v_nombre_encargado IN
+        SELECT nombreEncargado
+        FROM reservas
+        WHERE diaR = p_dia
+          AND horaInicio < p_hora_final
+          AND horaFinal > p_hora_inicio
+          AND laboratorio_id = p_laboratorio_id
+          AND activa = TRUE
+    LOOP
+        -- Obtener el correo institucional del encargado desde la tabla usuarios
+        SELECT correo_institucional INTO v_correo_encargado
+        FROM usuarios
+        WHERE nombre = v_nombre_encargado;
+        
+        -- Insertar el correo en la tabla cancelados si se encontró un correo válido
+        IF v_correo_encargado IS NOT NULL THEN
+            INSERT INTO cancelados (correo) VALUES (v_correo_encargado);
+        END IF;
+    END LOOP;
+
+    -- Si todas las reservas existentes son de estudiantes, ponerlas como inactivas
     UPDATE reservas
     SET activa = FALSE
     WHERE diaR = p_dia
@@ -208,10 +301,15 @@ BEGIN
       AND laboratorio_id = p_laboratorio_id
       AND activa = TRUE;
 
+    -- Insertar la nueva reserva
     INSERT INTO reservas (diaR, espacio_id, horaInicio, horaFinal, nombreEncargado, laboratorio_id, activa)
     VALUES (p_dia, 0, p_hora_inicio, p_hora_final, p_correo_profesor, p_laboratorio_id, TRUE);
+
+    -- Si todo fue exitoso, devolver 0 indicando que se realizó correctamente
+    RETURN 0;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 CREATE OR REPLACE FUNCTION agregar_reserva(
