@@ -87,6 +87,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $horaInicio = $_POST['horaInicio'];
     $horaFin = $_POST['horaFin'];
 
+    // Limpiar la tabla cancelados antes de realizar la reserva
+    $pdo->exec("DELETE FROM cancelados");
+
     // Obtener el correo del profesor encargado
     $sqlCorreoProfesor = "SELECT correo_institucional FROM usuarios WHERE nombre = :nombre_encargado AND rol = 'profesor'";
     $stmtCorreoProfesor = $pdo->prepare($sqlCorreoProfesor);
@@ -129,6 +132,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Enviar el correo al usuario autenticado
             enviarMensajeCorreo($correoUsuario, $mensaje);
+
+            // Verificar si la tabla cancelados tiene datos
+            $sqlCheckCancelados = "SELECT COUNT(*) FROM cancelados";
+            $stmtCheckCancelados = $pdo->query($sqlCheckCancelados);
+            $cantidadCancelados = $stmtCheckCancelados->fetchColumn();
+
+            if ($cantidadCancelados > 0) {
+                // Ejecutar la función para eliminar duplicados
+                $pdo->query("SELECT eliminar_duplicados_cancelados()");
+
+                // Obtener los correos de los registros cancelados
+                $sqlCorreosCancelados = "SELECT correo FROM cancelados";
+                $stmtCorreosCancelados = $pdo->query($sqlCorreosCancelados);
+                $cancelados = $stmtCorreosCancelados->fetchAll(PDO::FETCH_ASSOC);
+
+                // Enviar un correo de cancelación a cada registro en cancelados
+                foreach ($cancelados as $cancelado) {
+                    $correoCancelado = $cancelado['correo'];
+                    $mensajeCancelacion = "Su reserva ha sido cancelada, el motivo es Asignacion de una clase.\n\n" .
+                                          "Datos de su reserva:\n" .
+                                          "Laboratorio: $laboratorio_id\n" .
+                                          "Hora de inicio: $horaInicio\n" .
+                                          "Fecha: $fecha";
+
+                    enviarMensajeCorreo($correoCancelado, $mensajeCancelacion);
+                }
+            }
 
         } else {
             echo "Error al realizar la reserva";

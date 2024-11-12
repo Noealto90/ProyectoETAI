@@ -35,8 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function enviarReservaYObtenerEscritorios() {
     const selectedLab = document.getElementById('lab-select').value;
-    const selectedDate = document.getElementById('confirm-date').innerText;
-    const selectedTime = document.getElementById('confirm-time').innerText;
+    const selectedDate = document.getElementById('confirm-date').innerText;  // Usar la fecha seleccionada en el paso 1
+    const selectedTime = document.getElementById('confirm-time').innerText;  // Usar la hora seleccionada en el paso 1
     const selectedDesk = document.getElementById('confirm-desk').innerText.split(' ')[1]; // Obtenemos el número de escritorio
 
     if (!selectedLab || !selectedDate || !selectedTime || !selectedDesk) {
@@ -46,8 +46,8 @@ function enviarReservaYObtenerEscritorios() {
 
     const reservaData = {
         lab: selectedLab,
-        date: selectedDate,
-        time: selectedTime,
+        date: selectedDate, // Enviar la fecha seleccionada
+        time: selectedTime, // Enviar la hora seleccionada
         desk: selectedDesk
     };
 
@@ -56,7 +56,7 @@ function enviarReservaYObtenerEscritorios() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(reservaData)
+        body: JSON.stringify(reservaData) // Enviar datos como JSON
     })
     .then(response => response.json())
     .then(data => {
@@ -69,6 +69,7 @@ function enviarReservaYObtenerEscritorios() {
     })
     .catch(error => console.error('Error:', error));
 }
+
 
 
 // Función para obtener los escritorios ocupados después de confirmar la reserva
@@ -85,18 +86,23 @@ function obtenerEscritoriosOcupados() {
 let selectedLab = 0; // Por defecto, Laboratorio 1
 
 function selectLab(labNumber) {
-    // Al seleccionar un laboratorio, hacer una solicitud para obtener los espacios disponibles
+    const selectedDate = document.getElementById('confirm-date').innerText;
+    const selectedTime = document.getElementById('confirm-time').innerText;
+
     fetch('reservas_estudiante.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ lab: labNumber })  // Enviar el número de laboratorio seleccionado
+        body: JSON.stringify({
+            lab: labNumber,
+            date: selectedDate,
+            time: selectedTime
+        })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Llamar a la función que genera los escritorios con los espacios obtenidos
             generateWorkspaces(data.espacios);
         } else {
             console.error('Error al obtener los espacios.');
@@ -104,6 +110,7 @@ function selectLab(labNumber) {
     })
     .catch(error => console.error('Error al hacer la solicitud:', error));
 }
+
 
 
 function generateWorkspaces(espacios) {
@@ -114,6 +121,7 @@ function generateWorkspaces(espacios) {
     espacios.forEach(espacio => {
         const workspace = document.createElement('div');
         workspace.classList.add('workspace');
+        workspace.setAttribute('data-id', espacio.espacio_id);  // Asignar data-id con el ID del escritorio
         workspace.textContent = `Espacio ${espacio.espacio_id}`;
         
         // Comprobar si el espacio está ocupado
@@ -130,19 +138,23 @@ function generateWorkspaces(espacios) {
 }
 
 
+
 function selectDesk(deskNumber) {
     // Remover la clase 'selected' de todos los escritorios
     document.querySelectorAll('.workspace').forEach((desk) => {
         desk.classList.remove('selected');
     });
 
-    // Marcar el escritorio seleccionado
-    const selected = document.querySelector(`.workspace:nth-child(${deskNumber})`);
-    selected.classList.add('selected');
+    // Seleccionar el escritorio en función del atributo data-id
+    const selected = document.querySelector(`.workspace[data-id="${deskNumber}"]`);
+    if (selected) {
+        selected.classList.add('selected');
+    }
 
     // Actualizar el panel de confirmación
     document.getElementById('confirm-desk').innerText = `Espacio ${deskNumber}`;
 }
+
 
 
 // Función para pasar a la siguiente fase y actualizar la sección de confirmación

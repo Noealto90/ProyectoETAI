@@ -27,8 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->query("SELECT activar_espacios();");
 
         // Ejecutar desactivar_espacios_por_reservas con la fecha y hora recibidas
-        $fecha = $input['date'] ?? '2024-10-15';
-        $hora = $input['time'] ?? '12:00:00';
+        $fecha = isset($input['date']) ? $input['date'] : '2024-10-15';
+        $hora = isset($input['time']) ? $input['time'] : '12:00:00';
+        // Registrar la fecha y hora que se están usando
+        error_log("Fecha usada en la reserva: $fecha, Hora usada en la reserva: $hora");
         $stmtDesactivar = $pdo->prepare("SELECT desactivar_espacios_por_reservas(:fecha, :hora);");
         $stmtDesactivar->execute([':fecha' => $fecha, ':hora' => $hora]);
 
@@ -147,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 - Fecha: $fecha
                 - Hora de Inicio: $hora
                 - Hora de Final: $horaFinal
-                - Compañero: " . ($nombreAcompanante ? "Correo del acompañante: $nombreAcompanante" : "Ninguno") . "
+                - Compañero: $nombreAcompanante
 
                 Le agradecemos por utilizar nuestro sistema de reservas. Si tiene alguna consulta, no dude en contactarnos.
 
