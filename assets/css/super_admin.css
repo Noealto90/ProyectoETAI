@@ -1,0 +1,86 @@
+.cancel-btn {
+    background-color: #ff4d4d; /* Color rojo para indicar cancelación */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background-color: #ff1a1a;
+}
+
+
+/* Estilos de la Card */
+.card-grid1, .card-grid2, .card-grid3, .card-grid4 {
+    display: grid;
+    gap: 50px;
+    width: 100%;
+    max-width: 1200px;
+    justify-items: center; /* Centrar los cards horizontalmente */
+    margin-bottom: 50px;
+}
+
+.card-grid1 {
+    grid-template-columns: repeat(1, minmax(220px, 1fr));
+}
+
+.card-grid2 {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+}
+
+.card-grid3 {
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+}
+
+.card-grid4 {
+    grid-template-columns: repeat(4, minmax(220px, 1fr));
+}
+
+.cardSuperAdmin {
+    background-color: #fff; /* Fondo blanco */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
+    width: 210px;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centrar en el eje Y */
+    align-items: center; /* Centrar en el eje X */
+}
+
+.cardSuperAdmin:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    background-color: #e0e0e0; /* Gris claro */
+}
+
+.cardSuperAdmin h2 {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: #003366; /* Texto azul oscuro */
+    transition: color 0.3s ease;
+}
+
+.cardSuperAdmin i {
+    margin-bottom: 10px;
+    color: #003366; /* Color del icono */
+    transition: color 0.3s ease;
+}
+
+.cardSuperAdmin:hover i, .cardSuperAdmin:hover h2 {
+    color: #1E90FF; /* Azul más claro */
+}
+
+/* Centrar la última card en la fila inferior */
+.cardSuperAdmin-grid::after {
+    content: "";
+    flex: auto;
+}
