@@ -165,7 +165,7 @@ Then open your web browser and navigate to:
 http://localhost/ProyectoETAI/index.php
 ```
 
-## 🎮 Usage
+## Usage
 
 ### First-Time Setup
 
@@ -209,7 +209,7 @@ http://localhost/ProyectoETAI/index.php
 3. Describe the issue
 4. Submit report
 
-## 🔧 Common Issues & Solutions
+## Common Issues & Solutions
 
 ### Database Connection Error
 
@@ -231,7 +231,7 @@ http://localhost/ProyectoETAI/index.php
 - Enable "Less secure app access" or use App Passwords for Gmail
 - Check firewall settings for SMTP port (587/465)
 
-## 📈 Database Schema
+## Database Schema
 
 ### Main Tables
 
@@ -250,7 +250,7 @@ http://localhost/ProyectoETAI/index.php
 - Reservations linked to specific spaces and users
 - Damage reports associated with equipment and users
 
-## 📝 Future Enhancements
+## Future Enhancements
 
 - [ ] Mobile application (iOS/Android)
 - [ ] Real-time notifications (WebSocket)
@@ -261,7 +261,7 @@ http://localhost/ProyectoETAI/index.php
 - [ ] API for third-party integrations
 - [ ] Automated equipment maintenance scheduling
 
-## 👥 Contributors
+## Contributors
 
 This project was developed as part of the Database Administration course at ETAI (Escuela Técnica de Administración e Informática).
 
