@@ -263,7 +263,7 @@ http://localhost/ProyectoETAI/index.php
 
 ## Contributors
 
-This project was developed as part of the Database Administration course at ETAI (Escuela Técnica de Administración e Informática).
+This project was developed as part of the **Administración de Proyectos** course at the **Instituto Tecnológico de Costa Rica**.
 
 **Development Team**:
 
