@@ -271,6 +271,6 @@ This project was developed as part of the Database Administration course at ETAI
 - Frontend Development & UI/UX
 - System Architecture & Integration
 
-## 📄 License
+## License
 
-This project is developed for academic purposes as part of the **Database Administration** course - II Semester 2024.
+This project is developed for academic purposes as part of the **Administración de proyectos** course - II Semester 2024.
