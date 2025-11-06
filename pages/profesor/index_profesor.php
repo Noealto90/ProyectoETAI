@@ -1,9 +1,9 @@
 <?php
 session_start(); // Inicia la sesión
 
-// Verifica si el usuario está autenticado y tiene el rol de 'profesor'
+// Verifica si el usuario está autenticado y si tiene el rol de 'profesor'
 if (!isset($_SESSION['nombre']) || $_SESSION['rol'] != 'profesor') {
-    header('Location: ../auth/login.php'); // Redirige si no tiene acceso
+    header('Location: login.php'); // Redirige si no tiene acceso
     exit();
 }
 
@@ -29,7 +29,7 @@ include_once __DIR__ . '/../../templates/navbars/navbar_profesor.php';
             <i class="fas fa-calendar-alt fa-3x"></i>
             <h2>Administrar Reservas</h2>
         </div>
-        <div class="cardSuperAdmin" onclick="location.href='reporte.php'">
+        <div class="cardSuperAdmin" onclick="location.href='../shared/reporte.php'">
             <i class="fas fa-tools fa-3x"></i>
             <h2>Reportar Daños</h2>
         </div>

@@ -4,8 +4,8 @@ $title = "Renovar Espacio - Sistema de Gestión de Equipos";
 $headerTitle = "Renovar Espacio";
 // Añadir CSS específico para esta página
 $extraCss = 'assets/css/renovar.css';
-include_once __DIR__ . '/../templates/layouts/header.php';
-include_once __DIR__ . '/../templates/navbars/navbar_estudiante.php';
+include_once __DIR__ . '/../../templates/layouts/header.php';
+include_once __DIR__ . '/../../templates/navbars/navbar_estudiante.php';
 ?>
 
 <div class="container">
@@ -20,4 +20,4 @@ include_once __DIR__ . '/../templates/navbars/navbar_estudiante.php';
         <input type="submit" value="Confirmar Renovación" class="button">
     </div>
 </div>
-<?php include_once __DIR__ . '/../templates/layouts/footer.php'; ?>
+<?php include_once __DIR__ . '/../../templates/layouts/footer.php'; ?>

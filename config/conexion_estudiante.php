@@ -1,10 +1,11 @@
 <?php
 // Archivo movido desde includes/conexion_estudiante.php (adaptado a nueva ubicación)
+require_once __DIR__ . '/setting.php'; // Carga las constantes de configuración
 
-$host = 'localhost';
-$dbname = 'administracion2';
-$user = 'postgres';
-$password = 'Admin';
+$host = SERVIDOR;
+$dbname = DATABASE;
+$user = USUARIO;
+$password = PASSWORD;
 
 try {
     $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);

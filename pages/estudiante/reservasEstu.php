@@ -17,8 +17,8 @@ $headerTitle = "Reservas de Laboratorios ETAI";
 $extraCss = 'assets/css/reservas-estudiante.css';
 $extraHeadHtml = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">';
 
-include_once __DIR__ . '/../templates/layouts/header.php';
-include_once __DIR__ . '/../templates/navbars/navbar_estudiante.php';
+include_once __DIR__ . '/../../templates/layouts/header.php';
+include_once __DIR__ . '/../../templates/navbars/navbar_estudiante.php';
 ?>
 <!-- Contenido principal de la página (el <head> y el header ya fueron incluidos) -->
     <div class="container">
@@ -129,4 +129,4 @@ include_once __DIR__ . '/../templates/navbars/navbar_estudiante.php';
     <script src="<?= $basePath ?>/assets/js/script.js"></script>
     <script src="<?= $basePath ?>/assets/js/validacion_uso_compartido.js"></script>
 
-<?php include_once __DIR__ . '/../templates/layouts/footer.php'; ?>
+<?php include_once __DIR__ . '/../../templates/layouts/footer.php'; ?>

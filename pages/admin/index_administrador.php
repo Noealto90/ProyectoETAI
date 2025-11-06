@@ -21,9 +21,9 @@ include_once __DIR__ . '/../../templates/navbars/navbar_administrador.php';
 <div class="container">
     <h2>Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?></h2>
     <div class="card-grid">
-        <div class="cardSuperAdmin" onclick="location.href='reserva_clase.php'">
-            <i class="fas fa-calendar-check fa-3x"></i>
-            <h2>Reservar Actividad</h2>
+        <div class="cardSuperAdmin" onclick="location.href='gestion_equipos.php'">
+            <i class="fas fa-cogs fa-3x"></i>
+            <h2>Gestionar Equipos</h2>
         </div>
         <div class="cardSuperAdmin" onclick="location.href='ver_reportes.php'">
             <i class="fas fa-tools fa-3x"></i>

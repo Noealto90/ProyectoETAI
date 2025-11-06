@@ -1,8 +1,8 @@
 <?php
 $title = "Sistema de Gestión de Equipos";
 $headerTitle = "Gestión de Equipos de Laboratorio";
-include_once __DIR__ . '/../templates/layouts/header.php';
-include_once __DIR__ . '/../templates/navbars/navbar_super_admin.php';
+include_once __DIR__ . '/../../templates/layouts/header.php';
+include_once __DIR__ . '/../../templates/navbars/navbar_administrador.php';
 ?>
 <div class="container">
     <h2>Seleccione una opción del menú para gestionar los equipos</h2>
@@ -27,4 +27,4 @@ include_once __DIR__ . '/../templates/navbars/navbar_super_admin.php';
         </div>
     </div>
 </div>
-<?php include_once __DIR__ . '/../templates/layouts/footer.php'; ?>
+<?php include_once __DIR__ . '/../../templates/layouts/footer.php'; ?>
