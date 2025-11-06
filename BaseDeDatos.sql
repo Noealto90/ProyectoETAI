@@ -1,5 +1,5 @@
 -- Crear tablas
-CREATE TABLE usuarios (
+CREATE TABLE IF NOT EXISTS usuarios (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NULL,
     correo_institucional VARCHAR(255) UNIQUE NOT NULL CHECK (correo_institucional LIKE '%@etai.ac.cr'),
@@ -9,31 +9,30 @@ CREATE TABLE usuarios (
 );
 
 --Se desactivo para probar lo de que llegue el correo
-ALTER TABLE usuarios
-DROP CONSTRAINT usuarios_correo_institucional_check;
+ALTER TABLE usuarios DROP CONSTRAINT IF EXISTS usuarios_correo_institucional_check;
 
 
-CREATE TABLE laboratorios (
+CREATE TABLE IF NOT EXISTS laboratorios (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     capacidad INT NOT NULL
 );
 
-CREATE TABLE equipos (
+CREATE TABLE IF NOT EXISTS equipos (
     id SERIAL PRIMARY KEY,
     codigo VARCHAR(50) UNIQUE NOT NULL,
     tipo VARCHAR(50) NOT NULL CHECK (tipo IN ('computadora', 'mesa', 'silla')),
     laboratorio_id INT REFERENCES laboratorios(id) ON DELETE CASCADE
 );
 
-CREATE TABLE espacios (
+CREATE TABLE IF NOT EXISTS espacios (
     laboratorio_id INT REFERENCES laboratorios(id) ON DELETE CASCADE,
     espacio_id INT NOT NULL CHECK (espacio_id BETWEEN 0 AND 22),
     activa BOOLEAN DEFAULT TRUE,
     PRIMARY KEY (laboratorio_id, espacio_id)
 );
 
-CREATE TABLE reservas (
+CREATE TABLE IF NOT EXISTS reservas (
     id SERIAL PRIMARY KEY,
     laboratorio_id INT REFERENCES laboratorios(id) ON DELETE CASCADE,
     espacio_id INT,
@@ -47,19 +46,19 @@ CREATE TABLE reservas (
     REFERENCES espacios(laboratorio_id, espacio_id) ON DELETE RESTRICT
 );
 
-CREATE TABLE cancelados (
+CREATE TABLE IF NOT EXISTS cancelados (
     id SERIAL PRIMARY KEY,
     correo VARCHAR(255) NOT NULL
 );
 -- Crear tabla roles_asignados
-CREATE TABLE roles_asignados (
+CREATE TABLE IF NOT EXISTS roles_asignados (
     id SERIAL PRIMARY KEY,
     correo_institucional VARCHAR(255) UNIQUE NOT NULL CHECK (correo_institucional LIKE '%@etai.ac.cr'),
     rol VARCHAR(50) NOT NULL CHECK (rol IN ('administrador', 'profesor', 'estudiante', 'superAdmin'))
 );
 
 -- Crear tabla reportes_daños
-CREATE TABLE reportes_daños (
+CREATE TABLE IF NOT EXISTS reportes_daños (
     id SERIAL PRIMARY KEY,
     codigo_equipo VARCHAR(50) REFERENCES equipos(codigo) ON DELETE CASCADE,
     descripcion TEXT NOT NULL,
@@ -69,14 +68,14 @@ CREATE TABLE reportes_daños (
 
 
 
---Se pueden borrar
-CREATE TABLE cuatrimestres (
+-- Crear tabla cuatrimestres
+CREATE TABLE IF NOT EXISTS cuatrimestres (
     id SERIAL PRIMARY KEY,
 	numero INT NOT NULL,
-	año INT NOT NULL
+	anio INT NOT NULL
 );
 
-CREATE TABLE dias(
+CREATE TABLE IF NOT EXISTS dias(
 	id SERIAL PRIMARY KEY,
 	idDia VARCHAR(10) NOT NULL
 );
@@ -86,7 +85,12 @@ CREATE TABLE dias(
 
 ------
 -- Agregar columna estado a la tabla equipos
-ALTER TABLE equipos ADD COLUMN estado VARCHAR(50) DEFAULT 'disponible' CHECK (estado IN ('disponible', 'bloqueado'));
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'equipos' AND column_name = 'estado') THEN
+        ALTER TABLE equipos ADD COLUMN estado VARCHAR(50) DEFAULT 'disponible' CHECK (estado IN ('disponible', 'bloqueado'));
+    END IF;
+END $$;
 
 
 
@@ -154,15 +158,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
---Prueba
-select * from cancelados
-delete from cancelados
-select * from reservas
-select * from usuarios
-SELECT reserva_cuatrimestre('2024-11-8', 2, 'Emma Lopez', '11:00:00', '15:00:00')
-
-SELECT eliminar_duplicados_cancelados();
-
 
 CREATE OR REPLACE FUNCTION reserva_cuatrimestre(
     fecha_inicio DATE,
@@ -223,20 +218,6 @@ $$ LANGUAGE plpgsql;
 
 --FUNCIÓN PARA REALIZAR LAS RESERVAS DE PROFESORES O ADMINISTRATIVOS
 
-
-select realizar_reserva('2024-11-19', '09:00:00', '12:30:00', 'Emma Lopez', 2)
-
-select * from usuarios
-select * from cancelados
-delete from cancelados
-
-select * from reservas where diar = '2024-11-19'
-delete from reservas where id = 64;
-delete from reservas where id = 155
-delete from reservas where id = 45
-
-insert into reservas (laboratorio_id, espacio_id, nombreEncargado, nombreAcompanante, horainicio, horafinal, diar)
-values (2, 1, 'Luna Torres', null, '08:30:00', '11:30:00', '2024-11-19')
 
 CREATE OR REPLACE FUNCTION realizar_reserva( 
     p_dia DATE,
@@ -481,12 +462,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS verificar_capacidad_equipos ON equipos;
 CREATE TRIGGER verificar_capacidad_equipos
 BEFORE INSERT ON equipos
 FOR EACH ROW
 EXECUTE FUNCTION verificar_capacidad_laboratorio();
 
-CREATE TABLE auditoria_laboratorios (
+CREATE TABLE IF NOT EXISTS auditoria_laboratorios (
     id SERIAL PRIMARY KEY,
     laboratorio_id INT,
     accion VARCHAR(50),
@@ -504,10 +486,28 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS registrar_modificacion_laboratorio ON laboratorios;
 CREATE TRIGGER registrar_modificacion_laboratorio
 AFTER UPDATE ON laboratorios
 FOR EACH ROW
 EXECUTE FUNCTION registrar_cambios_laboratorio();
+
+-- Limpiar datos existentes para permitir re-ejecución
+TRUNCATE TABLE reservas CASCADE;
+TRUNCATE TABLE espacios CASCADE;
+TRUNCATE TABLE equipos CASCADE;
+TRUNCATE TABLE reportes_daños CASCADE;
+TRUNCATE TABLE cancelados CASCADE;
+TRUNCATE TABLE roles_asignados CASCADE;
+TRUNCATE TABLE cuatrimestres CASCADE;
+TRUNCATE TABLE dias CASCADE;
+TRUNCATE TABLE auditoria_laboratorios CASCADE;
+TRUNCATE TABLE laboratorios CASCADE;
+
+TRUNCATE TABLE usuarios CASCADE;
+
+-- Resetear secuencia de laboratorios para que los IDs empiecen en 1
+ALTER SEQUENCE laboratorios_id_seq RESTART WITH 1;
 
 -- Insertar datos iniciales
 INSERT INTO usuarios (nombre, correo_institucional, contrasena, rol) VALUES
@@ -516,6 +516,8 @@ INSERT INTO usuarios (nombre, correo_institucional, contrasena, rol) VALUES
 ('Luis Fernández', 'lfernandez@etai.ac.cr', 'miClaveSecreta123', 'estudiante'),
 ('Mario Rojas', 'mrojas@etai.ac.cr', 'claveDeAdmin123', 'administrador');
 
+
+-- Insertar laboratorios antes de los espacios para cumplir la restricción de llave foránea
 INSERT INTO laboratorios (nombre, capacidad) VALUES
 ('Laboratorio #1', 30),
 ('Laboratorio #2', 25);
@@ -536,9 +538,8 @@ BEGIN
     END LOOP;
 END $$;
 
-
-insert into espacios (laboratorio_id, espacio_id) values (1, 0) --El 0 significa todos los espacios
-insert into espacios (laboratorio_id, espacio_id) values (2, 0) 
+INSERT INTO espacios (laboratorio_id, espacio_id) VALUES (1, 0); --El 0 significa todos los espacios
+INSERT INTO espacios (laboratorio_id, espacio_id) VALUES (2, 0); 
 
 
 -- Insertar reservas de prueba
@@ -551,10 +552,6 @@ VALUES (1, 12, 'Emma Lopez', '10:00:00', '13:00:00', '2024-10-15');
 INSERT INTO reservas (laboratorio_id, espacio_id, nombreEncargado, horaInicio, horaFinal, diaR)
 VALUES (1, 9, 'Ana Pérez', '10:00:00', '11:30:00', '2024-12-08');
 
-
-delete from reservas
-select * from reservas
-select * from usuarios
 
 INSERT INTO reservas (laboratorio_id, espacio_id, nombreEncargado, horaInicio, diaR)
 VALUES (1, NULL, 'estudiante@institucion.com', '20:00:00', '2024-11-02');
@@ -574,7 +571,7 @@ INSERT INTO equipos (codigo, tipo, laboratorio_id) VALUES
 ('SILLA-ELC-01', 'silla', 2);
 
 -- Insertar un cuatrimestre
-INSERT INTO cuatrimestres (id, numero, año)
+INSERT INTO cuatrimestres (id, numero, anio)
 VALUES (1, 3, 2024);
 
 -- Insertar días de la semana en la tabla dias
@@ -586,3 +583,13 @@ VALUES ('Lunes'),
        ('Viernes'),
 	   ('Sabado'),
 	   ('Domingo');
+
+-- Ensure cuatrimestres table is recreated
+DROP TABLE IF EXISTS cuatrimestres CASCADE;
+
+-- Crear tabla cuatrimestres
+CREATE TABLE IF NOT EXISTS cuatrimestres (
+    id SERIAL PRIMARY KEY,
+	numero INT NOT NULL,
+	anio INT NOT NULL
+);

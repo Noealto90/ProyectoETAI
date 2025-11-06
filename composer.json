@@ -1,0 +1,12 @@
+{
+  "name": "proyecto/etai",
+  "description": "Proyecto de reservas reorganizado",
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.4"
+  }
+}
