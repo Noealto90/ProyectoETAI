@@ -252,14 +252,14 @@ http://localhost/ProyectoETAI/index.php
 
 ## Future Enhancements
 
-- [ ] Mobile application (iOS/Android)
-- [ ] Real-time notifications (WebSocket)
-- [ ] QR code-based check-in/check-out
-- [ ] Integration with institutional calendar
-- [ ] Advanced analytics and reporting
-- [ ] Multi-language support
-- [ ] API for third-party integrations
-- [ ] Automated equipment maintenance scheduling
+- Mobile application (iOS/Android)
+- Real-time notifications (WebSocket)
+- QR code-based check-in/check-out
+- Integration with institutional calendar
+- Advanced analytics and reporting
+- Multi-language support
+- API for third-party integrations
+- Automated equipment maintenance scheduling
 
 ## Contributors
 
