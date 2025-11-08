@@ -3,7 +3,7 @@ session_start(); // Inicia la sesión
 
 // Verifica si el usuario está autenticado y si tiene el rol de 'profesor'
 if (!isset($_SESSION['nombre']) || $_SESSION['rol'] != 'profesor') {
-    header('Location: login.php'); // Redirige si no tiene acceso
+    header('Location: ../auth/login.php'); // Redirige al login si no tiene acceso
     exit();
 }
 
@@ -16,6 +16,12 @@ $headerTitle = "Panel del Profesor";
 
 include_once __DIR__ . '/../../templates/layouts/header.php';
 include_once __DIR__ . '/../../templates/navbars/navbar_profesor.php';
+
+// Evitar acceso si la sesión ha sido destruida
+if (session_status() === PHP_SESSION_NONE) {
+    header('Location: ../auth/login.php');
+    exit();
+}
 ?>
 
 <div class="container">

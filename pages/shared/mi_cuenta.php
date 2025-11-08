@@ -3,8 +3,6 @@ session_start();
 $title = "Mi Cuenta";
 $headerTitle = "Mi Cuenta";
 include_once __DIR__ . '/../../templates/layouts/header.php';
-// include navbar depending on role
-
 
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['nombre']) || !isset($_SESSION['rol'])) {
@@ -12,16 +10,23 @@ if (!isset($_SESSION['nombre']) || !isset($_SESSION['rol'])) {
     exit();
 }
 
-
 // Incluir la barra de navegación correspondiente según el rol del usuario
-if ($_SESSION['rol'] == 'superAdmin') {
-    include_once __DIR__ . '/../../templates/navbars/navbar_super_admin.php';
-} elseif ($_SESSION['rol'] == 'estudiante') {
-    include_once __DIR__ . '/../../templates/navbars/navbar_estudiante.php';
-} else {
-    // Si el rol no es válido, redirigir al login
-    header('Location: ../auth/login.php');
-    exit();
+switch ($_SESSION['rol']) {
+    case 'superAdmin':
+        include_once __DIR__ . '/../../templates/navbars/navbar_super_admin.php';
+        break;
+    case 'estudiante':
+        include_once __DIR__ . '/../../templates/navbars/navbar_estudiante.php';
+        break;
+    case 'profesor':
+        include_once __DIR__ . '/../../templates/navbars/navbar_profesor.php';
+        break;
+    case 'administrativo':
+        include_once __DIR__ . '/../../templates/navbars/navbar_administrador.php';
+        break;
+    default:
+        header('Location: ../auth/login.php');
+        exit();
 }
 
 // Conexión a la base de datos
@@ -30,18 +35,18 @@ require_once __DIR__ . '/../../config/conexion.php';
 $con = new Conexion();
 $pdo = $con->getConexion();
 
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['nombre']) || !isset($_SESSION['rol'])) {
-    header('Location: ../auth/login.php');
-    exit();
-}
-
 // Obtener los datos del usuario
 $correo = $_SESSION['usuario'];
 $query = "SELECT nombre, correo_institucional FROM usuarios WHERE correo_institucional = :correo";
 $stmt = $pdo->prepare($query);
 $stmt->execute([':correo' => $correo]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Evitar acceso a esta página si la sesión ha sido destruida
+if (session_status() === PHP_SESSION_NONE) {
+    header('Location: ../auth/login.php');
+    exit();
+}
 
 // Actualizar los datos del usuario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
