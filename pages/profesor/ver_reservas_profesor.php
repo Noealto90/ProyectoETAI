@@ -7,8 +7,9 @@ if (!isset($_SESSION['nombre']) || $_SESSION['rol'] != 'profesor') {
     exit();
 }
 
-// Recupera el nombre del usuario
+// Recupera el nombre y correo del usuario (correo se guarda en sesión como 'usuario')
 $nombreUsuario = $_SESSION['nombre'];
+$correoUsuario = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : null;
 
 // Conexión a la base de datos
 include_once __DIR__ . '/../../config/conexion.php';  // Asegúrate de que el archivo existe y la variable $pdo esté correctamente definida
@@ -19,13 +20,41 @@ $pdo = $con->getConexion();
 // Consulta las reservas del profesor
 $sql = "SELECT id, laboratorio_id, espacio_id, nombreEncargado, nombreAcompanante, horaInicio, horaFinal, diaR, activa 
         FROM reservas 
-        WHERE nombreEncargado = :nombreUsuario 
-        AND activa = true";
+        WHERE (nombreEncargado = :nombreUsuario";
+if ($correoUsuario) {
+    $sql .= " OR nombreEncargado = :correoUsuario";
+}
+$sql .= ") AND activa = true";
 
 $stmt = $pdo->prepare($sql);
 $stmt->bindParam(':nombreUsuario', $nombreUsuario);
+if ($correoUsuario) {
+    $stmt->bindParam(':correoUsuario', $correoUsuario);
+}
 $stmt->execute();
 $reservas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Si no se encontraron reservas, obtener algunas filas recientes para depuración
+if (empty($reservas)) {
+    try {
+        $debugSql = "SELECT * FROM reservas WHERE nombreEncargado = :nombreUsuario";
+        if ($correoUsuario) {
+            $debugSql .= " OR nombreEncargado = :correoUsuario";
+        }
+        $debugSql .= " ORDER BY id DESC LIMIT 10";
+
+        $dbgStmt = $pdo->prepare($debugSql);
+        $dbgStmt->bindParam(':nombreUsuario', $nombreUsuario);
+        if ($correoUsuario) {
+            $dbgStmt->bindParam(':correoUsuario', $correoUsuario);
+        }
+        $dbgStmt->execute();
+        $debugRows = $dbgStmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $debugRows = [];
+        error_log('Error debug reservas: ' . $e->getMessage());
+    }
+}
 
 // Variables para el header
 $title = "Ver Reservas - Profesor";
@@ -47,7 +76,7 @@ include_once __DIR__ . '/../../templates/navbars/navbar_profesor.php';
                         <th>Hora Inicio</th>
                         <th>Hora Final</th>
                         <th>Día</th>
-                        <th>Acompañante</th>
+                        <!-- Acompañante oculto para reservas de profesores -->
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -57,10 +86,40 @@ include_once __DIR__ . '/../../templates/navbars/navbar_profesor.php';
                         <tr>
                             <td><?php echo htmlspecialchars($reserva['laboratorio_id']); ?></td>
                             <td><?php echo htmlspecialchars($reserva['espacio_id']); ?></td>
-                            <td><?php echo isset($reserva['horainicio']) ? htmlspecialchars($reserva['horainicio']) : 'No especificada'; ?></td>
-                            <td><?php echo isset($reserva['horafinal']) ? htmlspecialchars($reserva['horafinal']) : 'No especificada'; ?></td>
-                            <td><?php echo isset($reserva['diar']) ? htmlspecialchars($reserva['diar']) : 'No especificado'; ?></td>
-                            <td><?php echo !empty($reserva['nombreacompanante']) ? htmlspecialchars($reserva['nombreacompanante']) : 'N/A'; ?></td>
+                            <td>
+                                <?php
+                                    // Accept either DB column casing (Postgres folds unquoted identifiers to lowercase)
+                                    $rawHi = $reserva['horaInicio'] ?? $reserva['horainicio'] ?? null;
+                                    if (!empty($rawHi)) {
+                                        $t = DateTime::createFromFormat('H:i:s', $rawHi);
+                                        echo $t ? htmlspecialchars($t->format('H:i')) : htmlspecialchars($rawHi);
+                                    } else {
+                                        echo 'No especificada';
+                                    }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                    $rawHf = $reserva['horaFinal'] ?? $reserva['horafinal'] ?? null;
+                                    if (!empty($rawHf)) {
+                                        $t2 = DateTime::createFromFormat('H:i:s', $rawHf);
+                                        echo $t2 ? htmlspecialchars($t2->format('H:i')) : htmlspecialchars($rawHf);
+                                    } else {
+                                        echo 'No especificada';
+                                    }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                    $rawDia = $reserva['diaR'] ?? $reserva['diar'] ?? null;
+                                    if (!empty($rawDia)) {
+                                        $d = DateTime::createFromFormat('Y-m-d', $rawDia);
+                                        echo $d ? htmlspecialchars($d->format('d/m/Y')) : htmlspecialchars($rawDia);
+                                    } else {
+                                        echo 'No especificado';
+                                    }
+                                ?>
+                            </td>
                             <td><?php echo $reserva['activa'] ? 'Activa' : 'Inactiva'; ?></td>
                             <td class="cancel-icon">
                                 <!-- Icono para cancelar la reserva con confirmación -->
@@ -77,6 +136,30 @@ include_once __DIR__ . '/../../templates/navbars/navbar_profesor.php';
             </table>
         <?php else: ?>
             <p>No se encontraron reservas para este usuario.</p>
+            <?php if (isset($debugRows) && !empty($debugRows)): ?>
+                <div style="margin-top:16px;padding:12px;border:1px solid #eee;background:#fff;">
+                    <h3>Depuración: filas recientes para este usuario</h3>
+                    <p>Verifique si las columnas horaInicio, horaFinal o diaR están nulas o con otro valor.</p>
+                    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                        <thead>
+                            <tr>
+                                <?php foreach (array_keys($debugRows[0]) as $col): ?>
+                                    <th style="border:1px solid #ddd;padding:6px;background:#f9f9f9;"><?php echo htmlspecialchars($col); ?></th>
+                                <?php endforeach; ?>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($debugRows as $r): ?>
+                                <tr>
+                                    <?php foreach ($r as $v): ?>
+                                        <td style="border:1px solid #eee;padding:6px;"><?php echo htmlspecialchars((string)$v); ?></td>
+                                    <?php endforeach; ?>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </div>

@@ -313,7 +313,8 @@ if (confirmBtn) {
     });
 })();
 
-// User menu toggle (click to open/close). Keeps hover behavior for desktop
+// User menu toggle (click to open/close). Hover behavior has been disabled;
+// the menu is shown only when the `.open` class is present on `.user-menu`.
 (function() {
     const userMenu = document.querySelector('.user-menu');
     if (!userMenu) return;

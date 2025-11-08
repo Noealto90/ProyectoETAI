@@ -1,7 +1,7 @@
 <?php 
 session_start();
-$title = "Reservar Actividad o Clase";
-$headerTitle = "Reservar Actividad o Clase";
+$title = "Reservar Lab";
+$headerTitle = "Reservar Lab";
 
 require_once __DIR__ . '/../config/conexion_estudiante.php';
 $autoload = __DIR__ . '/../vendor/autoload.php';

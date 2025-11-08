@@ -1,7 +1,7 @@
 <?php 
 session_start();
-$title = "Reservar Actividad o Clase";
-$headerTitle = "Reservar Actividad o Clase";
+$title = "Reservar Lab";
+$headerTitle = "Reservar Lab";
 
 require_once __DIR__ . '/../../config/conexion_estudiante.php';
 $autoload = __DIR__ . '/../../vendor/autoload.php';
@@ -28,6 +28,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombreProfesor = !empty($_POST['nombreProfesor']) ? $_POST['nombreProfesor'] : $nombreProfesorPorDefecto;
     $laboratorioId = $_POST['laboratorio'];
 
+        // Normalizar formato de hora a HH:MM:SS si vienen como HH:MM
+        if (!empty($horaInicio) && preg_match('/^\d{1,2}:\d{2}$/', $horaInicio)) {
+            $horaInicio .= ':00';
+        }
+        if (!empty($horaFinal) && preg_match('/^\d{1,2}:\d{2}$/', $horaFinal)) {
+            $horaFinal .= ':00';
+        }
+
+        // Log de depuración: valores recibidos antes de llamar a la función
+        error_log("[reserva_clase] datos recibidos - dia={$dia}, horaInicio={$horaInicio}, horaFinal={$horaFinal}, nombreProfesor={$nombreProfesor}, laboratorioId={$laboratorioId}");
+
     try {
         $pdo->query("DELETE FROM cancelados");
 
@@ -47,6 +58,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bindParam(':laboratorioId', $laboratorioId);
             $stmt->execute();
             $resultado = $stmt->fetchColumn();
+            // Log del resultado y de cualquier error PDO
+            $err = $stmt->errorInfo();
+            error_log("[reserva_clase] ejecutar realizar_reserva errorInfo: " . json_encode($err));
+            error_log("[reserva_clase] resultado de realizar_reserva: " . var_export($resultado, true));
 
             if ($resultado == 1) {
                 $message = "<div id='confirmation-message' style='background-color: #dc3545; color: white; padding: 15px; border-radius: 5px; text-align: center;'>No se puede realizar la reserva, hay una reserva de mayor o igual jerarquía.</div>";
@@ -108,7 +123,9 @@ function enviarMensajeCorreo($correo, $asunto, $cuerpo) {
         $mail->SMTPAuth = true;
         $mail->Username = 'noealto03@gmail.com';
         $mail->Password = 'swro tdsr scpk fqwk';
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    // Use 'tls' for compatibility across PHPMailer versions where the
+    // PHPMailer::ENCRYPTION_STARTTLS constant may not be defined.
+    $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
         $mail->setFrom('noealto03@gmail.com', 'Sistema de Reservas');
         $mail->addAddress($correo);
