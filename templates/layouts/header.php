@@ -56,16 +56,39 @@ if ($basePath === '/' || $basePath === '\\' || $basePath === '.' || $basePath ==
 </head>
 <body>
 <header>
-    <div class="header-content">
+    <div class="header-content header-flex">
         <div class="logo-container">
             <img src="<?= $basePath ?>/assets/images/logo.png" alt="Logo" class="logo">
         </div>
-        <h1><?php echo $headerTitle; ?></h1>
-        <div class="user-menu">
-            <i class="fas fa-user-circle user-icon" onclick="window.location.href='<?= $basePath ?>/pages/shared/mi_cuenta.php'"></i>
-            <div class="user-menu-content">
-                <a href="<?= $basePath ?>/pages/shared/mi_cuenta.php"><i class="fas fa-user"></i>Mi Cuenta</a>
-                <a href="<?= $basePath ?>/pages/auth/logout.php"><i class="fas fa-sign-out-alt"></i>Salir</a>
+
+        <?php
+        // Insert role-based navbar inside the header so links appear integrated with logo and profile
+        if (session_status() === PHP_SESSION_NONE) {
+            @session_start();
+        }
+        $role = isset($_SESSION['rol']) ? $_SESSION['rol'] : null;
+        $navbarPath = __DIR__ . "/../navbars/navbar_" . ($role ? $role : 'estudiante') . ".php";
+        if (file_exists($navbarPath)) {
+            include_once $navbarPath;
+        } else {
+            // Fallback to a generic navbar if role-specific not found
+            $fallback = __DIR__ . "/../navbars/navbar_estudiante.php";
+            if (file_exists($fallback)) include_once $fallback;
+        }
+        ?>
+        <div class="right-controls">
+            <button id="menuToggle" class="menu-toggle" aria-label="Mostrar menú">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="user-menu">
+                <button class="user-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="userMenuContent">
+                    <i class="fas fa-user-circle user-icon" aria-hidden="true"></i>
+                </button>
+                <div id="userMenuContent" class="user-menu-content" role="menu">
+                    <a role="menuitem" href="<?= $basePath ?>/pages/shared/mi_cuenta.php"><i class="fas fa-user"></i>Mi Cuenta</a>
+                    <a role="menuitem" href="<?= $basePath ?>/pages/auth/logout.php"><i class="fas fa-sign-out-alt"></i>Salir</a>
+                </div>
             </div>
         </div>
     </div>

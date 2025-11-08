@@ -42,37 +42,42 @@
 
 .cardSuperAdmin {
     background-color: #fff; /* Fondo blanco */
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease;
     cursor: pointer;
-    width: 210px;
-    height: 180px;
+    width: 100%;
+    max-width: 320px; /* permite que el grid controle el tamaño */
+    height: auto;
+    min-height: 140px;
     display: flex;
     flex-direction: column;
     justify-content: center; /* Centrar en el eje Y */
     align-items: center; /* Centrar en el eje X */
+    box-sizing: border-box;
 }
 
 .cardSuperAdmin:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-    background-color: #e0e0e0; /* Gris claro */
+    transform: translateY(-6px);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
+    background-color: #f5f5f5; /* Gris suave */
 }
 
 .cardSuperAdmin h2 {
-    margin-bottom: 20px;
-    font-size: 1.5em;
+    margin: 12px 0 0 0;
+    font-size: 1.1rem;
     color: #003366; /* Texto azul oscuro */
-    transition: color 0.3s ease;
+    transition: color 0.22s ease;
+    line-height: 1.2;
 }
 
 .cardSuperAdmin i {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     color: #003366; /* Color del icono */
-    transition: color 0.3s ease;
+    transition: color 0.22s ease;
+    font-size: 2.2rem;
 }
 
 .cardSuperAdmin:hover i, .cardSuperAdmin:hover h2 {
@@ -83,4 +88,27 @@
 .cardSuperAdmin-grid::after {
     content: "";
     flex: auto;
+}
+
+/* Responsive tweaks for professor/admin cards */
+@media (max-width: 800px) {
+    .cardSuperAdmin {
+        max-width: 280px;
+        padding: 20px;
+        min-height: 150px;
+    }
+    .cardSuperAdmin h2 {
+        font-size: 1.05rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .cardSuperAdmin {
+        max-width: 95%;
+        padding: 18px;
+        min-height: 140px;
+    }
+    .cardSuperAdmin h2 {
+        font-size: 1rem;
+    }
 }

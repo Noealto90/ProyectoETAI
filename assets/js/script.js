@@ -9,27 +9,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const today = new Date().toISOString().split('T')[0];
 
     // Configuramos Flatpickr para mostrar el calendario siempre visible
-    flatpickr(calendarContainer, {
-        minDate: today,
-        inline: true,
-        onChange: function(selectedDates, dateStr) {
-            selectedDate = dateStr; // Guardar la fecha seleccionada
-            document.getElementById('confirm-date').innerText = dateStr;
-        }
-    });
+    if (typeof flatpickr !== 'undefined' && calendarContainer) {
+        flatpickr(calendarContainer, {
+            minDate: today,
+            inline: true,
+            onChange: function(selectedDates, dateStr) {
+                selectedDate = dateStr; // Guardar la fecha seleccionada
+                const cd = document.getElementById('confirm-date');
+                if (cd) cd.innerText = dateStr;
+            }
+        });
+    }
 
-    // Validar la hora entre 7:00 AM y 9:30 PM
-    timeInput.addEventListener('change', function() {
-        const selectedTime = timeInput.value;
-        const [hour, minutes] = selectedTime.split(':').map(Number);
-        
-        if ((hour === 7 && minutes >= 0) || (hour === 21 && minutes <= 30) || (hour > 7 && hour < 21)) {
-            confirmTime.innerText = selectedTime;
-        } else {
-            alert('Por favor selecciona una hora entre las 7:00 PM y 9:30 PM.');
-            timeInput.value = ''; // Resetear el valor si no está en el rango
-        }
-    });
+    // Validar la hora entre 7:00 AM y 9:30 PM (solo si existe el input)
+    if (timeInput && confirmTime) {
+        timeInput.addEventListener('change', function() {
+            const selectedTime = timeInput.value;
+            const parts = selectedTime.split(':');
+            if (parts.length !== 2) return;
+            const [hour, minutes] = parts.map(Number);
+            
+            if ((hour === 7 && minutes >= 0) || (hour === 21 && minutes <= 30) || (hour > 7 && hour < 21)) {
+                confirmTime.innerText = selectedTime;
+            } else {
+                alert('Por favor selecciona una hora entre las 7:00 PM y 9:30 PM.');
+                timeInput.value = ''; // Resetear el valor si no está en el rango
+            }
+        });
+    }
 });
 
 
@@ -228,7 +235,9 @@ function previousStep(step) {
 
 
 
-document.querySelector('.confirm-btn').addEventListener('click', function() {
+const confirmBtn = document.querySelector('.confirm-btn');
+if (confirmBtn) {
+    confirmBtn.addEventListener('click', function() {
     // Recopilar los datos seleccionados
     const selectedLab = document.querySelector('#lab-select').value;
     const selectedDate = document.getElementById('confirm-date').innerText;
@@ -279,3 +288,64 @@ document.querySelector('.confirm-btn').addEventListener('click', function() {
     
 
 });
+}
+
+
+// Navbar toggle for mobile
+(() => {
+    const menuToggle = document.getElementById('menuToggle');
+    const nav = document.querySelector('nav');
+    if (!menuToggle || !nav) return;
+
+    menuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        nav.classList.toggle('open');
+        const expanded = nav.classList.contains('open');
+        menuToggle.setAttribute('aria-expanded', expanded);
+    });
+
+    // Close nav when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!nav.contains(e.target) && !menuToggle.contains(e.target)) {
+            nav.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+})();
+
+// User menu toggle (click to open/close). Keeps hover behavior for desktop
+(function() {
+    const userMenu = document.querySelector('.user-menu');
+    if (!userMenu) return;
+
+    const toggle = userMenu.querySelector('.user-toggle');
+    const menuContent = userMenu.querySelector('.user-menu-content');
+
+    // Toggle on click
+    toggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = userMenu.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Close when clicking outside anywhere in the document
+    document.addEventListener('click', function(e) {
+        if (!userMenu.contains(e.target)) {
+            if (userMenu.classList.contains('open')) {
+                userMenu.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+        }
+    });
+
+    // Optional: close with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+            if (userMenu.classList.contains('open')) {
+                userMenu.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.focus();
+            }
+        }
+    });
+})();

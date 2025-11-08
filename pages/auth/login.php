@@ -63,7 +63,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 ?>
-<link rel="stylesheet" href="<?= $basePath ?>/assets/css/login.css">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="<?= $basePath ?>/assets/css/login.css">
+</head>
+<body>
 <div class="login-main-container">
     <div class="login-container">
         <!-- Logo (puedes cambiar el src con el logo real que deseas) -->
@@ -83,10 +91,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <p class="error"><?php echo htmlspecialchars($error); ?></p>
             <?php endif; ?>
 
-            <a href="#">¿Olvidaste tu contraseña?</a>
-            <a href="register.php" class="create-account">Crear cuenta</a>
-
             <input type="submit" value="Iniciar Sesión" class="btn-login">
+
+            <a href="forgot_password.php" class="forgot-password">¿Olvidaste tu contraseña?</a>
+            <a href="register.php" class="create-account">Crear cuenta</a>
         </form>
     </div>
 </div>
+</body>
+</html>
