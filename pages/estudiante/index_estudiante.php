@@ -33,7 +33,7 @@ include_once __DIR__ . '/../../templates/navbars/navbar_estudiante.php';
         </div>
         <div class="card" onclick="location.href='ver_reservas_estudiante.php'">
             <i class="fas fa-calendar-alt fa-3x"></i>
-            <h2>Ver Reservas Activas</h2>
+            <h2>Mis reservas</h2>
         </div>
         <div class="card" onclick="location.href='renovar.php'">
             <i class="fas fa-sync-alt fa-3x"></i>
